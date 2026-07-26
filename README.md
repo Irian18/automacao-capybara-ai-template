@@ -164,17 +164,17 @@ A camada `features/support/self_healing/` fornece:
       |system.md.erb| Manual da empresa: "use sempre data-test-id, nunca XPath absoluto, valide  campos obrigatórios"|
       |business_rules/cliente.md|Documentação do produto: "para cadastrar cliente, o CPF precisa ser válido e o botão Salvar fica desabilitado com erros"|
    - Use system.md.erb quando quiser mudar:
-      A estratégia de seletores (ex: priorizar data-testid);
-      As ferramentas disponíveis;
-      O tom ou formato das respostas;
-      Regras genéricas de automação.
+      - A estratégia de seletores (ex: priorizar data-testid);
+      - As ferramentas disponíveis;
+      - O tom ou formato das respostas;
+      - Regras genéricas de automação.
 
    - Use knowledge_base/business_rules/ quando quiser ensinar:
-      Regras de negócio da aplicação;
-      Fluxos específicos;
-      Mensagens de erro esperadas;
-      Validações de campos;
-      Dados de teste válidos.
+      - Regras de negócio da aplicação;
+      - Fluxos específicos;
+      - Mensagens de erro esperadas;
+      - Validações de campos;
+      - Dados de teste válidos.
    - system.md.erb ensina o agente como testar.
    - knowledge_base/business_rules/ ensina o agente o que testar.
 
