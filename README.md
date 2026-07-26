@@ -91,6 +91,31 @@ bundle exec cucumber features/specs/exemplo.feature
 
 ---
 
+## 📁 cucumber.yml e Perfis de Execução
+
+O arquivo [`cucumber.yml`](cucumber.yml) centraliza os **perfis** do Cucumber, combinando formatação, ambiente, relatórios e drivers em um único lugar.
+
+| Perfil | Descrição |
+|--------|-----------|
+| `default` | Perfil ativado automaticamente. Combina `pretty`, `allure`, `local`, `cuprite`, `rag` e exclui cenários `@wip`. |
+| `pretty` / `for_ci` | Formatação do console (`pretty` para local, `progress` para CI). |
+| `local` / `staging` / `sandbox` / `prod` / `prod_automacao_ci` | Define o `ENVIRONMENT_TYPE` correspondente. |
+| `allure` / `html` / `json` | Gera relatórios nos formatos indicados. |
+| `rag` / `norag` | Ativa ou desativa o RAG (Retrieval-Augmented Generation). |
+
+### ENVIRONMENT_TYPE
+
+A variável `ENVIRONMENT_TYPE` indica qual arquivo de configuração de ambiente será carregado em `features/support/environments/<ENVIRONMENT_TYPE>.yml`. Ela é definida pelo perfil escolhido no `cucumber.yml`:
+
+```bash
+bundle exec cucumber -p staging   # ENVIRONMENT_TYPE=staging
+bundle exec cucumber -p prod      # ENVIRONMENT_TYPE=prod
+```
+
+Isso permite alternar rapidamente entre ambientes (local, staging, produção etc.) sem alterar código.
+
+---
+
 ## 🏗️ Estrutura do Projeto
 
 ```
@@ -128,12 +153,37 @@ A camada `features/support/self_healing/` fornece:
 2. **Geração de Page Objects**
    - `SelfHealing::PageObjectGenerator` — gera Page Objects SitePrism via IA a partir do HTML
 
+3. **Leitura de Features**
+   - [`SelfHealing::FeatureReader`](features/support/self_healing/feature_reader.rb) — lê arquivos `.feature` e extrai cenários, tags e steps. É usado internamente pelo runner de cenários para descobrir e executar testes de self healing de forma automatizada.
+
+4. **RAG Knowledge Base**
+   - Pasta [`knowledge_base/`](features/support/self_healing/knowledge_base/) para armazenar documentos da aplicação (`.md`, `.txt`, `.yml`, `.rb`, `.feature`). Antes de executar uma instrução, o agente recupera os documentos mais relevantes e injeta no prompt da LLM, melhorando a assertividade das decisões. Veja [`knowledge_base/README.md`](features/support/self_healing/knowledge_base/README.md) para detalhes de configuração.
+   - 
+      |  Arquivo  |  Papel |
+      |-----------|--------|
+      |system.md.erb| Manual da empresa: "use sempre data-test-id, nunca XPath absoluto, valide  campos obrigatórios"|
+      |business_rules/cliente.md|Documentação do produto: "para cadastrar cliente, o CPF precisa ser válido e o botão Salvar fica desabilitado com erros"|
+   - Use system.md.erb quando quiser mudar:
+      A estratégia de seletores (ex: priorizar data-testid);
+      As ferramentas disponíveis;
+      O tom ou formato das respostas;
+      Regras genéricas de automação.
+
+   - Use knowledge_base/business_rules/ quando quiser ensinar:
+      Regras de negócio da aplicação;
+      Fluxos específicos;
+      Mensagens de erro esperadas;
+      Validações de campos;
+      Dados de teste válidos.
+   - system.md.erb ensina o agente como testar.
+   - knowledge_base/business_rules/ ensina o agente o que testar.
+
 ```ruby
 agent = SelfHealing::Agent.new(page_object: @page)
 agent.execute("Faça login com usuário 'admin' e senha 'secret'")
 ```
 
-Documentação completa: [`features/support/self_healing/README.md`](features/support/self_healing/README.md)
+Documentação completa da camada de Self Healing (modos de operação, configuração, RAG, retry adaptativo e execução automática de cenários) está em [`features/support/self_healing/README.md`](features/support/self_healing/README.md).
 
 ---
 
