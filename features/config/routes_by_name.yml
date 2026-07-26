@@ -1,0 +1,12 @@
+# Mapeamento opcional de rotas para nomes de página.
+# Adapte conforme a aplicação.
+
+default:
+  '/login': 'Página de Login'
+  '/home': 'Página Inicial'
+  '/examples': 'Listagem de Exemplos'
+
+filtered:
+  '/login': 'Página de Login'
+  '/home': 'Página Inicial'
+  '/examples': 'Listagem de Exemplos - Filtro'

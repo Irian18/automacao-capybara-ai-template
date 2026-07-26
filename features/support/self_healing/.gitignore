@@ -1,0 +1,14 @@
+# Planos gerados automaticamente — não devem ser versionados
+plans/*.json
+
+# Snapshots temporários
+tmp/self_healing_snapshot.json
+
+# Page Objects gerados temporariamente
+tmp/page_objects/generated/*.rb
+
+# Store local do RAG (embeddings e índice)
+rag_store/
+
+# Configurações locais do projeto (copiar a partir do .example)
+config/design_system.yml

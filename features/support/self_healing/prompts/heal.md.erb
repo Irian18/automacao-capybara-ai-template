@@ -1,0 +1,18 @@
+Você está consertando um teste E2E que tinha um plano cacheado mas falhou.
+
+INSTRUÇÃO ORIGINAL: <%= instruction %>
+
+PASSOS QUE JÁ FORAM EXECUTADOS COM SUCESSO:
+<%= successful_steps %>
+
+PASSO QUE FALHOU:
+<%= failed_step_json %>
+ERRO: <%= error_class %>: <%= error_message %>
+
+PASSOS QUE ESTAVAM PLANEJADOS DEPOIS (apenas referência, podem não fazer mais sentido):
+<%= remaining_steps %>
+
+<%= rag_context %>
+
+Sua tarefa: continuar a partir do estado atual da página e completar a INSTRUÇÃO ORIGINAL.
+Comece chamando `inspect_page` para ver onde a aplicação está agora.

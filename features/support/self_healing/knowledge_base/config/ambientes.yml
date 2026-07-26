@@ -1,0 +1,23 @@
+# Configuração de ambientes para o agente de testes
+# Estes valores são apenas de referência para o RAG.
+
+local:
+  url_home: "http://localhost:3000"
+  api_base: "http://localhost:3000/api/v1"
+  usuario_padrao: "usuario@exemplo.com"
+  senha_padrao: "senha123"
+  headless: false
+
+staging:
+  url_home: "https://staging.exemplo.com"
+  api_base: "https://staging.exemplo.com/api/v1"
+  usuario_padrao: "usuario@exemplo.com"
+  senha_padrao: "senha123"
+  headless: true
+
+prod:
+  url_home: "https://app.exemplo.com"
+  api_base: "https://app.exemplo.com/api/v1"
+  usuario_padrao: "usuario@exemplo.com"
+  senha_padrao: "senha123"
+  headless: true

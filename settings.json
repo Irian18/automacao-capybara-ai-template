@@ -1,0 +1,83 @@
+{
+  "workbench.iconTheme": "vscode-icons",
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "cSpell.language": "pt-BR,pt,en-US,en-GB,en",
+  "cSpell.enableFiletypes": [
+    "ruby",
+    "xml",
+    "xsl"
+  ],
+  "cSpell.userWords": [
+    "Cenario",
+    "usuario"
+  ],
+  "editor.minimap.enabled": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "window.zoomLevel": 1,
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.defaultFoldingRangeProvider": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.rulers": [120],
+    "editor.semanticHighlighting.enabled": true
+  },
+  "rubyLsp.enabledFeatures": {
+    "codeActions": true,
+    "diagnostics": true,
+    "documentHighlights": true,
+    "documentLink": true,
+    "documentSymbols": true,
+    "foldingRanges": true,
+    "formatting": true,
+    "hover": true,
+    "inlayHint": true,
+    "onTypeFormatting": true,
+    "selectionRanges": true,
+    "semanticHighlighting": true,
+    "completion": true,
+    "codeLens": true,
+    "definition": true,
+    "workspaceSymbol": true,
+    "signatureHelp": true
+  },
+  "rubocop.layoutMode": true,
+  "rubocop.lintMode": true,
+  "ruby.rubocop.autocorrectOnSave": true,
+  "solargraph.formatting": true,
+  "ruby.format": "solargraph",
+  "solargraph.autoformat": true,
+  "solargraph.useBundler": true,
+  "solargraph.diagnostics": true,
+  "solargraph.downloadMissingCore": true,
+  "solargraph.useLanguageServer": true,
+  "ruby.useLanguageServer": true,
+  "cucumberautocomplete.isBehatEnvironment": true,
+  "cucumberautocomplete.customParameters": [],
+  "editor.guides.bracketPairs": "active",
+  "cucumber.features": [
+    "features/specs/**/*.feature"
+  ],
+  "cucumber.glue": [
+    "features/step_definitions/**/*.rb"
+  ],
+  "[feature]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.defaultFormatter": "alexkrechik.cucumberautocomplete"
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "files.associations": {
+    "*.feature": "feature"
+  }
+}

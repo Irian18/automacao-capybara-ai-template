@@ -1,0 +1,25 @@
+---
+default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p local -p cuprite -p rag
+
+# Formatação
+pretty: --format pretty
+for_ci: --format progress
+
+# Ambientes de teste
+example: ENVIRONMENT_TYPE=example
+local: ENVIRONMENT_TYPE=local
+staging: ENVIRONMENT_TYPE=staging
+sandbox: ENVIRONMENT_TYPE=sandbox
+prod: ENVIRONMENT_TYPE=prod
+prod_automacao_ci: ENVIRONMENT_TYPE=prod_automacao_ci
+
+# RAG
+rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0
+norag: RAG_ENABLED=false
+
+# Relatórios
+html: --format html --out=report/html_report/report.html
+allure: --format AllureCucumber::CucumberFormatter --out report/allure_results
+json: --format json --out=report/json_report/report.json
+
+routes_name: ROUTES_NAME=features/config/routes_by_name.yml

@@ -1,0 +1,21 @@
+coverage/
+report/
+tmp/
+allure-report
+arquivos_chrome
+.vscode
+.env
+.env.*
+!/.env.example
+node_modules
+# Kimi project memory
+.kimi-memory/
+# Credentials e dados sensíveis
+features/support/credentials/*
+!features/support/credentials/.gitkeep
+
+# SelfHealing — arquivos gerados automaticamente
+features/support/self_healing/plans/
+features/support/self_healing/rag_store/
+features/support/self_healing/tmp/
+

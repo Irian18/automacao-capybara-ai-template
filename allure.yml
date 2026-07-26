@@ -1,0 +1,5 @@
+plugins:
+  - allure-ruby
+  - allure-video:
+      source-patterns:
+        - "report/*.mp4"

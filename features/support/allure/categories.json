@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Erros de referência",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*ReferenceError.*"
+  },
+  {
+    "name": "Elemento não encontrado",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*not found.*|.*ElementNotFound.*|.*NodeNotFoundError.*"
+  },
+  {
+    "name": "Timeout / falha de espera",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*timed out.*|.*Timeout.*"
+  },
+  {
+    "name": "Falha de rede / API",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*ApiError.*|.*Connection.*|.*Net::.*"
+  },
+  {
+    "name": "Falhas ignoradas",
+    "matchedStatuses": ["skipped"]
+  }
+]
