@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfólio profissional de automação de testes, QA e IA.">
+  <title>Portfólio | Automação de Testes & QA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-dark: #0284c7;
+      --success: #22c55e;
+      --radius: 12px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --max-width: 1000px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--surface);
+      z-index: 100;
+    }
+
+    nav {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    section {
+      margin-bottom: 4rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 1.75rem;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--surface-hover);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .about p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--surface-hover);
+      transform: translateY(-4px);
+    }
+
+    .card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .skill {
+      background: var(--surface);
+      border: 1px solid var(--surface-hover);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      transition: background 0.15s ease;
+    }
+
+    .skill:hover {
+      background: var(--surface-hover);
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--surface);
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        gap: 1rem;
+        font-size: 0.85rem;
+      }
+
+      .hero {
+        padding: 2.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Seu Nome</div>
+      <ul class="nav-links">
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#projetos">Projetos</a></li>
+        <li><a href="#habilidades">Habilidades</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Olá, eu sou Irian Rockenbach<span>QA & Analista e Automação de Testes</span></h1>
+      <p>Construo testes automatizados confiáveis com Capybara e Ruby elevando a qualidade de software.</p>
+      <div class="btn-group">
+        <a href="https://github.com/Irian18/automacao-capybara-ai-template" class="btn btn-primary">Ver projeto</a>
+        <a href="https://github.com/irian18" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
+      </div>
+    </section>
+
+    <section id="sobre" class="about">
+      <h2>👤 Sobre mim</h2>
+      <p>
+        Analista de Testes com 9 anos de experiência em garantia da qualidade de software, sendo 5 anos
+        dedicados à automação de testes. Atuo desde a execução de testes manuais funcionais, regressão,
+        sanidade e exploratórios até a criação e liderança de projetos de automação end-to-end e de
+        performance. Tenho sólida vivência com Ruby, Capybara, Cucumber (BDD), Page Objects
+        (SitePrism/DSL), Selenium, Grafana K6, Postman e Jira Atlassian (Kanban).
+        </p>
+      <p>
+        Sou movido pela curiosidade técnica e pelo compromisso de entregar software com qualidade real e mensurável.
+      </p>
+    </section>
+
+    <section id="projetos">
+      <h2>🚀 Projetos em destaque</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Capybara + IA</h3>
+          <p>
+            Framework de automação com Capybara e Ruby integrado a modelos de IA. Usa <strong>RAG</strong>
+            para buscar contexto do histórico de testes e interface, e aplica <strong>Self Healing</strong>
+            para corrigir seletores automaticamente quando a UI muda, reduzindo a manutenção da suíte mas mantendo histórico de alterações para análises.
+          </p>
+          <div class="tags">
+            <span class="tag">Capybara</span>
+            <span class="tag">Ruby</span>
+            <span class="tag">RAG</span>
+            <span class="tag">Self Healing Locators</span>
+            <span class="tag">IA</span>
+            <span class="tag">Allure</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>BDD com Cucumber</h3>
+          <p>
+            Suíte de testes legíveis para stakeholders, usando Gherkin, Cucumber e Capybara com fixtures customizadas e relatórios integrados.
+          </p>
+          <div class="tags">
+            <span class="tag">Cucumber</span>
+            <span class="tag">Gherkin</span>
+            <span class="tag">BDD</span>
+            <span class="tag">Capybara</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Relatórios Allure</h3>
+          <p>
+            Sistema automático de anexos para o Allure Report: screenshots, vídeos, traces, logs e snapshots de falha
+            anexados a cada teste.
+          </p>
+          <div class="tags">
+            <span class="tag">Allure</span>
+            <span class="tag">Reporting</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="habilidades">
+      <h2>🛠️ Habilidades</h2>
+      <div class="skills-list">
+        <span class="skill">Teste Manual</span>
+        <span class="skill">Teste funcional</span>
+        <span class="skill">Teste de Regreção</span>
+        <span class="skill">Teste de Aceitação</span>
+        <span class="skill">Teste exploratório</span>
+        <span class="skill">Criação e manutenção de cenários de teste</span>
+        <span class="skill">Criação e manutenção de casos de teste</span>
+        <span class="skill">Teste de API</span>
+        <span class="skill">Teste de Performance</span>
+        <span class="skill">Automação de teste ambiente Web</span>
+        <span class="skill">Ruby</span>
+        <span class="skill">Framework Capybara</span>
+        <span class="skill">Framework Cucumber (BDD)</span>
+        <span class="skill">Padrão de projeto em automação de testes - PageObjects SitePrism (DSL)</span>
+        <span class="skill">Selenium WebDriver</span>
+        <span class="skill">Typescript</span>
+        <span class="skill">Python</span>
+        <span class="skill">Playwright</span>
+        <span class="skill">Cypress</span>
+        <span class="skill">Grafana K6/Report</span>
+        <span class="skill">Análise de métricas de performance pelo Chrome DevTools Protocol</span>
+        <span class="skill">Relatório dinâmico - Allure Report</span>
+        <span class="skill">Git & GitHub</span>
+        <span class="skill">Postman</span>
+        <span class="skill">Jira Atlassian (Kanban/Scrum)</span>
+        <span class="skill">Desenvolvimento ágil</span>
+        
+      </div>
+    </section>
+
+    <section id="contato">
+      <h2>📬 Contato</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Meus Contatos:
+      </p>
+      <div class="contact-links">
+        <a href="https://github.com/irian18" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
+        <a href="https://linkedin.com/in/irian8" target="_blank" rel="noopener noreferrer" class="btn btn-outline">LinkedIn</a>
+        <a href="mailto:irian18@gmail.com" class="btn btn-outline">E-mail</a>
+        <a href="https://wa.me/5545999774120" target="_blank" rel="noopener noreferrer" class="btn btn-outline">WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Irian Rockenbach. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
