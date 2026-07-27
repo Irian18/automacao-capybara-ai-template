@@ -266,8 +266,9 @@
       font-family: 'Fira Code', 'Consolas', monospace;
       font-size: 0.9rem;
       color: var(--text);
-      white-space: pre;
+      white-space: pre-wrap; /* Alterado de 'pre' para 'pre-wrap' */
       display: block;
+      word-break: break-all;
     }
 
     .code-block .comment {
@@ -508,7 +509,7 @@
         o projeto funciona como uma suíte E2E tradicional.
       </p>
 
-      <div class="diagram">
+      <pre class="diagram"><code>
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │  1. Cenário Cucumber (.feature)                                             │
 └────────────────────────────────┬────────────────────────────────────────────┘
@@ -554,8 +555,7 @@
                                                   ┌────────────────────────┐
                                                   │ Teste continua com o   │
                                                   │ novo seletor           │
-                                                  └────────────────────────┘
-      </div>
+                                                  └────────────────────────┘</code></pre>
 
       <p style="color: var(--text-muted); margin-top: 1.5rem;">
         <strong>Destaques do fluxo:</strong>
@@ -661,7 +661,7 @@ allure serve report/allure-results</code>
         ambiente, driver e recursos de IA. Veja quando usar cada um:
       </p>
       <div class="code-block">
-        <code>|     Perfil      |              O que habilita                  |             Quando usar                |
+        <code>|     Perfil      |              O que habilita                    |             Quando usar                |
 |-----------------|----------------------------------------------|----------------------------------------|
 | default         | Allure, Cuprite, ambiente example, sem IA    | Execução diária e CI padrão            |
 | self_healing    | SELF_HEALING_ENABLED=true + LocatorHistory   | UI instável ou em refactoring          |
