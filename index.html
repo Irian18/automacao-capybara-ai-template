@@ -322,6 +322,7 @@
       <ul class="nav-links">
         <li><a href="#sobre">Sobre</a></li>
         <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#historico">Histórico</a></li>
         <li><a href="#arquitetura">Arquitetura</a></li>
         <li><a href="#como-usar">Como Usar</a></li>
         <li><a href="#tecnologias">Tecnologias</a></li>
@@ -357,6 +358,12 @@
         e <strong>RAG</strong>, que busca contexto nos Page Objects para enriquecer o prompt enviado ao modelo de IA.
       </p>
       <p>
+        Toda alteração de locator realizada pelo Self Healing é registrada em um histórico versionado
+        (<code>features/support/self_healing/locator_history.json</code>). Isso permite que o time de QA revise
+        manualmente cada mudança e verifique se o novo seletor realmente representa o mesmo elemento —
+        evitando falsos negativos e mantendo a confiabilidade da suíte.
+      </p>
+      <p>
         Por padrão, ambos os recursos estão <strong>desabilitados</strong> — basta usar os perfis
         <code>cucumber -p self_healing</code> e/ou <code>cucumber -p rag</code> quando quiser ativá-los.
       </p>
@@ -369,11 +376,13 @@
           <h3>🧠 Self Healing Locators</h3>
           <p>
             Quando um elemento não é encontrado, a IA propõe um novo seletor com base na DOM atual.
-            Todas as alterações são registradas em <code>locator_history.json</code> para auditoria.
+            Cada mudança é versionada e salva em <code>locator_history.json</code>, permitindo revisão
+            manual antes de tornar a correção definitiva.
           </p>
           <div class="tags">
             <span class="tag">IA</span>
             <span class="tag">Autocorreção</span>
+            <span class="tag">Auditoria</span>
             <span class="tag warning">Opcional</span>
           </div>
         </article>
@@ -383,6 +392,7 @@
           <p>
             Indexa os arquivos de <code>features/pages</code> e os utiliza como contexto extra no prompt,
             ajudando o modelo a sugerir seletores mais precisos e alinhados ao padrão do projeto.
+            Com RAG, a IA "conhece" a estrutura dos Page Objects e respeita as convenções do time.
           </p>
           <div class="tags">
             <span class="tag">Contexto</span>
@@ -445,6 +455,51 @@
       </div>
     </section>
 
+    <section id="historico" class="about">
+      <h2>📜 Histórico de alterações de locators</h2>
+      <p>
+        Cada vez que o Self Healing propõe um novo locator, a alteração é salva em
+        <code>features/support/self_healing/locator_history.json</code>. Esse histórico funciona como um
+        <strong>log de auditoria versionado</strong>: você pode verificar quando a mudança aconteceu,
+        qual elemento foi afetado, qual era o seletor anterior e qual é o novo.
+      </p>
+      <p>
+        Isso é importante porque a IA, embora rápida, pode sugerir um seletor tecnicamente válido
+        semanticamente diferente do original. Com o histórico, o QA pode revisar manualmente e decidir
+        se aceita a correção ou se precisa ajustar o Page Object de forma mais segura.
+      </p>
+      <p>
+        O arquivo registra o <strong>page object</strong>, o <strong>nome do elemento</strong>, o
+        <strong>motivo da alteração</strong>, o <strong>tipo de mudança</strong> (heal/manual) e a
+        <strong>lista de versões</strong> do locator — como no exemplo abaixo:
+      </p>
+      <div class="code-block">
+        <code>{
+  "schema_version": "1.1.0",
+  "metadata": {
+    "description": "Histórico de alterações de locators",
+    "created_at": "2026-07-27T09:00:00-03:00",
+    "updated_at": "2026-07-27T14:32:10-03:00",
+    "total_entries": 3
+  },
+  "entries": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-07-27T14:32:10-03:00",
+      "page_object": "LoginPage",
+      "element_name": "in_user_id",
+      "change_type": "heal",
+      "reason": "ID do campo de login mudou de #email para #user-name",
+      "locators": [
+        { "version": 1, "locator": "#email" },
+        { "version": 2, "locator": "#user-name" }
+      ]
+    }
+  ]
+}</code>
+      </div>
+    </section>
+
     <section id="arquitetura" class="about">
       <h2>🏗️ Arquitetura do fluxo</h2>
       <p>
@@ -481,6 +536,7 @@
       <h2>🚀 Como usar</h2>
       <p style="color: var(--text-muted); margin-bottom: 1rem;">
         Instale as dependências, configure o <code>.env</code> e execute os cenários com o perfil desejado.
+        O projeto usa o <code>cucumber.yml</code> para combinar formatação, ambiente, drivers e relatórios.
       </p>
 
       <div class="code-block">
@@ -490,8 +546,17 @@ bundle install
 # Copiar e configurar variáveis de ambiente
 cp .env.example .env
 
+# Edite o .env se for usar IA
+AI_API_KEY=sua-chave-aqui
+
 # Execução padrão (Self Healing e RAG desabilitados)
 bundle exec cucumber
+
+# Executar por tag
+bundle exec cucumber -t @login
+
+# Executar feature específica
+bundle exec cucumber features/specs/exemplo.feature
 
 # Apenas Self Healing habilitado
 bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
@@ -501,6 +566,136 @@ bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_se
 
 # Gerar relatório Allure
 allure serve report/allure-results</code>
+      </div>
+
+      <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 1rem;">
+        Perfis principais disponíveis no <code>cucumber.yml</code>:
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>default</h3>
+          <p>Perfil ativado automaticamente. Executa com Allure, Cuprite e Self Healing/RAG desabilitados.</p>
+        </article>
+        <article class="card">
+          <h3>self_healing</h3>
+          <p>Habilita o agente de autocorreção de locators via IA e salva o histórico em JSON.</p>
+        </article>
+        <article class="card">
+          <h3>rag</h3>
+          <p>Habilita a busca de contexto nos Page Objects para enriquecer o prompt da IA.</p>
+        </article>
+        <article class="card">
+          <h3>local / staging / sandbox</h3>
+          <p>Definem qual arquivo de ambiente em <code>features/support/environments/</code> será carregado.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="perfis" class="about">
+      <h2>🎛️ Perfis de execução</h2>
+      <p>
+        Os perfis do <code>cucumber.yml</code> permitem combinar rapidamente formato de saída,
+        ambiente, driver e recursos de IA. Veja quando usar cada um:
+      </p>
+      <div class="code-block">
+        <code>| Perfil          | O que habilita                                          | Quando usar                            |
+|-----------------|---------------------------------------------------------|----------------------------------------|
+| default         | Allure, Cuprite, ambiente example, sem IA               | Execução diária e CI padrão            |
+| self_healing    | SELF_HEALING_ENABLED=true + LocatorHistory              | UI instável ou em refactoring          |
+| rag             | RAG_ENABLED=true + índice de features/pages             | Quer contexto dos Page Objects na IA   |
+| local/staging   | Carrega environment correspondente                      | Testar contra ambiente específico      |
+| cuprite         | Driver headless Chrome via CDP                          | Execução local rápida                  |
+| allure          | Gera resultados para o Allure Report                    | Sempre que precisar de evidências      |</code>
+      </div>
+    </section>
+
+    <section id="quando-usar" class="about">
+      <h2>🤔 Quando usar cada combinação</h2>
+      <p>
+        Self Healing e RAG são independentes. Você pode ligar um, outro, ambos ou nenhum,
+        dependendo do momento do projeto e do tipo de estabilidade da interface.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Nenhum recurso de IA</h3>
+          <p>
+            Use no dia a dia quando a aplicação está estável. A suíte executa mais rápido,
+            sem chamadas externas à API de IA, e mantém o comportamento previsível.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Só Self Healing</h3>
+          <p>
+            Ideal durante refatorações de frontend, quando elementos mudam de ID, classe ou posição
+            com frequência. O histórico registra cada correção para revisão posterior.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p self_healing</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Self Healing + RAG</h3>
+          <p>
+            Melhor custo-benefício quando a aplicação muda e você quer sugestões de locators
+            alinhadas ao padrão existente dos Page Objects. O contexto reduz alucinações da IA.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p self_healing -p rag</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Só RAG</h3>
+          <p>
+            Útil para geração ou revisão de Page Objects assistida por IA, mesmo sem precisar
+            de autocorreção em tempo de execução.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p rag</code>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="about">
+      <h2>❓ Dúvidas comuns</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>A IA altera meus Page Objects automaticamente?</h3>
+          <p>
+            Não. O Self Healing salva as alterações propostas no histórico em JSON, mas não
+            sobrescreve os arquivos <code>.rb</code> dos Page Objects. Você revisa e aplica manualmente.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>O que acontece se a IA sugerir um locator errado?</h3>
+          <p>
+            O histórico mostra o seletor anterior e o novo, além do motivo da alteração. Isso permite
+            identificar falsos positivos e corrigir o Page Object de forma segura.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Preciso de chave de IA para usar o projeto?</h3>
+          <p>
+            Apenas se for usar Self Healing ou RAG. A execução padrão do template funciona
+            completamente sem API externa.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Posso usar Selenium em vez de Cuprite?</h3>
+          <p>
+            Sim. O projeto já prevê perfis de driver e pode ser configurado para usar Selenium
+            WebDriver, Cuprite ou outro driver suportado pelo Capybara.
+          </p>
+        </article>
       </div>
     </section>
 
