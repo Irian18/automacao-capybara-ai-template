@@ -503,32 +503,95 @@
     <section id="arquitetura" class="about">
       <h2>🏗️ Arquitetura do fluxo</h2>
       <p>
-        O fluxo de execução é simples e previsível. Sem os perfis opcionais, o projeto funciona como uma
-        suíte de testes E2E tradicional. Com os perfis, a IA entra em ação apenas quando necessário.
+        A execução segue um fluxo claro: primeiro o teste tenta encontrar o elemento normalmente;
+        somente quando isso falha, a IA é acionada para propor uma correção. Sem os perfis opcionais,
+        o projeto funciona como uma suíte E2E tradicional.
       </p>
+
       <div class="diagram">
-<span class="highlight">Cenário Cucumber</span>
-       │
-       ▼
-<span class="highlight">Page Object (SitePrism)</span>
-       │
-       ▼
-<span class="highlight">Capybara + Driver</span>
-       │
-       ├─ Elemento encontrado? ── Sim ──▶ Continua o teste
-       │
-       └─ Não ──▶ [Self Healing] IA analisa a DOM
-                       │
-                       ├─ [RAG] Contexto de features/pages injetado no prompt
-                       │
-                       ▼
-               Novo seletor sugerido
-                       │
-                       ▼
-               Histórico salvo em locator_history.json
-                       │
-                       ▼
-               Teste continua com o novo locator
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  1. Cenário Cucumber (.feature)                                             │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  2. Step Definitions + Page Object (SitePrism)                              │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  3. Capybara + Driver (Cuprite / Selenium)                                  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+        ┌─────────────────────┐   ┌─────────────────────────────┐
+        │ Elemento encontrado │   │ Elemento NÃO encontrado     │
+        └──────────┬──────────┘   └─────────────┬───────────────┘
+                   │                              │
+                   ▼                              ▼
+        ┌─────────────────────┐   ┌─────────────────────────────┐
+        │ Teste continua      │   │ Self Healing acionado       │
+        └─────────────────────┘   └─────────────┬───────────────┘
+                                                │
+                              ┌─────────────────┴─────────────────┐
+                              │                                   │
+                              ▼                                   ▼
+                   ┌────────────────────┐            ┌────────────────────┐
+                   │ RAG opcional       │            │ IA analisa a DOM   │
+                   │ contexto de        │            │                    │
+                   │ features/pages     │───────────▶│ sugere novo locator│
+                   └────────────────────┘            └─────────┬──────────┘
+                                                               │
+                                                               ▼
+                                                  ┌────────────────────────┐
+                                                  │ Histórico salvo em     │
+                                                  │ locator_history.json   │
+                                                  └────────────┬───────────┘
+                                                               │
+                                                               ▼
+                                                  ┌────────────────────────┐
+                                                  │ Teste continua com o   │
+                                                  │ novo seletor           │
+                                                  └────────────────────────┘
+      </div>
+
+      <p style="color: var(--text-muted); margin-top: 1.5rem;">
+        <strong>Destaques do fluxo:</strong>
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>1️⃣ Execução normal primeiro</h3>
+          <p>
+            O teste executa da forma tradicional. A IA só é chamada quando realmente necessário,
+            evitando chamadas desnecessárias à API e mantendo a execução rápida.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>2️⃣ Falha como gatilho</h3>
+          <p>
+            Quando o Capybara não encontra o elemento, o Self Healing entra em ação,
+            analisando a DOM atual para encontrar o melhor candidato de substituição.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>3️⃣ Contexto com RAG</h3>
+          <p>
+            Se o perfil <code>rag</code> estiver ativo, o sistema busca trechos relevantes dos
+            Page Objects existentes e os inclui no prompt, melhorando a qualidade da sugestão.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>4️⃣ Auditoria automática</h3>
+          <p>
+            Toda sugestão é registrada no histórico com data, motivo, seletor antigo e novo,
+            permitindo revisão manual antes de aplicar a mudança nos arquivos do projeto.
+          </p>
+        </article>
       </div>
     </section>
 
@@ -598,14 +661,14 @@ allure serve report/allure-results</code>
         ambiente, driver e recursos de IA. Veja quando usar cada um:
       </p>
       <div class="code-block">
-        <code>| Perfil          | O que habilita                                          | Quando usar                            |
-|-----------------|---------------------------------------------------------|----------------------------------------|
-| default         | Allure, Cuprite, ambiente example, sem IA               | Execução diária e CI padrão            |
-| self_healing    | SELF_HEALING_ENABLED=true + LocatorHistory              | UI instável ou em refactoring          |
-| rag             | RAG_ENABLED=true + índice de features/pages             | Quer contexto dos Page Objects na IA   |
-| local/staging   | Carrega environment correspondente                      | Testar contra ambiente específico      |
-| cuprite         | Driver headless Chrome via CDP                          | Execução local rápida                  |
-| allure          | Gera resultados para o Allure Report                    | Sempre que precisar de evidências      |</code>
+        <code>|     Perfil      |              O que habilita                  |             Quando usar                |
+|-----------------|----------------------------------------------|----------------------------------------|
+| default         | Allure, Cuprite, ambiente example, sem IA    | Execução diária e CI padrão            |
+| self_healing    | SELF_HEALING_ENABLED=true + LocatorHistory   | UI instável ou em refactoring          |
+| rag             | RAG_ENABLED=true + índice de features/pages  | Quer contexto dos Page Objects na IA   |
+| local/staging   | Carrega environment correspondente           | Testar contra ambiente específico      |
+| cuprite         | Driver headless Chrome via CDP               | Execução local rápida                  |
+| allure          | Gera resultados para o Allure Report         | Sempre que precisar de evidências      |</code>
       </div>
     </section>
 
