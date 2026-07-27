@@ -118,8 +118,8 @@ O arquivo [`cucumber.yml`](cucumber.yml) centraliza os **perfis** do Cucumber, c
 | `allure` / `html` / `json` | Gera relatórios nos formatos indicados. |
 | `cuprite` | Define `BROWSER=cuprite`. |
 | `routes_name` | Carrega `ROUTES_NAME=features/config/routes_by_name.yml`. |
-| `rag` / `norag` | Ativa ou desativa o RAG. O profile `rag` usa `features/pages` como base de conhecimento. |
-| `self_healing` / `no_self_healing` | Ativa ou desativa o carregamento da camada Self Healing. |
+| `rag` / `norag` | Ativa ou desativa o RAG. O profile `rag` usa `features/pages` e `features\support\self_healing\knowledge_base` como base de conhecimento. |
+| `self_healing` / `no_self_healing` | Ativa ou desativa o carregamento da camada Self Healing, podendo usar arquivos .feature em `features\specs\self_healing` |
 
 ### ENVIRONMENT_TYPE
 
