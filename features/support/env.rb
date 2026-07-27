@@ -6,6 +6,7 @@ require 'site_prism'
 require 'faker'
 require 'date'
 require 'cpf_faker'
+require 'debug'
 require 'pry-byebug'
 require 'httparty'
 require 'allure-cucumber'
@@ -31,7 +32,7 @@ require_relative 'helpers/service_helper'
 require_relative 'helpers/intercept_request_helper'
 require 'matrix'
 require_relative 'helpers/siteprism_helper'
-require_relative 'self_healing/agent'
+require_relative 'self_healing/agent' if ENV['SELF_HEALING_ENABLED'] == 'true'
 
 Dir[File.join(File.dirname(__FILE__), 'helpers', '*.rb')].sort.each { |file| require_relative file }
 

@@ -44,13 +44,7 @@ Before do |scenario|
   @scenario_name = scenario.name.to_s.gsub(/[^a-zA-Z0-9_-]/, '_')[0, 80]
   @video_frames  = []
   sleep 0.5
-  reset_array_by_description
-  sleep 0.5
-  reset_array_by_external_id
-  sleep 0.5
-  reset_array_by_id
-  sleep 0.5
-  generate_access_credentials_v1(email: CONFIG['email_api_v1'], password: CONFIG['password_api_v1'])
+  generate_access_credentials_v1(email: CONFIG['email_api_v1'], password: CONFIG['password_api_v1']) if respond_to?(:login_service)
   sleep 0.5
 end
 

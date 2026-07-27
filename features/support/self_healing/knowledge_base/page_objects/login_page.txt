@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 # Cópia de referência do Page Object real:
 # features/pages/login/login_page.rb
 #
-# Este arquivo é usado pelo RAG para manter consistência na geração
-# de novos Page Objects. Não deve ser carregado diretamente nos testes.
+# Este arquivo é usado pelo RAG como exemplo de Page Object.
+# Foi renomeado para .txt para que o Cucumber não o carregue como código Ruby.
 
 require 'site_prism'
 

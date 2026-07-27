@@ -1,3 +1,5 @@
+require 'win32ole' if Gem.win_platform?
+
 source 'https://rubygems.org'
 
 ruby '~> 3.3.0'
@@ -14,6 +16,7 @@ gem 'selenium-webdriver', '~> 4.18.0'
 gem 'site_prism', '~> 5.0'
 
 gem 'byebug', '~> 11.1.3'
+gem 'pry', '~> 0.14'
 gem 'pry-byebug', '~> 3.10.1'
 
 gem 'allure-cucumber', '~> 2.0'
@@ -27,6 +30,7 @@ gem 'net-http', '~> 0.4'
 gem 'rubocop', '1.63.5'
 gem 'ruby-lsp'
 gem 'solargraph'
+gem 'debug', '~> 1.0'
 
 gem 'dotenv', '~> 3.0' # Leitura do .env com API_KEY
 gem 'json', '~> 2.7' # Parsing de resposta da API (stdlib, mas fixar versão)

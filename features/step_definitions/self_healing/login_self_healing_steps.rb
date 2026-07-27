@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../support/self_healing/agent'
+
 Dado('que acessei a página de login') do
   @agent ||= SelfHealing::Agent.new(
     session: Capybara.current_session,

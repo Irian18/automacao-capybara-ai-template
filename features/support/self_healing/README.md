@@ -7,6 +7,8 @@ Funcionalidades:
 1. **Self Healing Locators** — quando um plano cacheado falha durante o REPLAY, a IA corrige apenas o passo quebrado e atualiza o cache.
 2. **Geração de Page Objects** — geração de Page Objects SitePrism via IA (LLM) usando `SelfHealing::PageObjectGenerator`.
 
+> **Por padrão essa camada não é carregada.** O env.rb só faz `require_relative 'self_healing/agent'` quando `SELF_HEALING_ENABLED=true`, controlado pelo perfil `self_healing` no `cucumber.yml`.
+
 ---
 
 ## Visão geral
@@ -30,7 +32,7 @@ Cada instrução vira um **plano** (lista de tool calls) persistido em JSON. Nas
 
 **Arquivo:** `agent.rb`
 
-A partir de agora o agente também pode usar **RAG (Retrieval-Augmented Generation)** para enriquecer o prompt com documentos relevantes da pasta `knowledge_base/`. Veja a seção [RAG](#rag-retrieval-augmented-generation).
+A partir de agora o agente também pode usar **RAG (Retrieval-Augmented Generation)** para enriquecer o prompt com documentos relevantes. Veja a seção [RAG](#7-rag-retrieval-augmented-generation).
 
 Classe central que coordena RECORD/REPLAY/HEAL.
 
@@ -150,12 +152,13 @@ cuprite: BROWSER=cuprite
 | `BASE_URL` | `.env` | Base URL da API |
 | `MODEL` | `.env` | Modelo usado pelo agente (RECORD/HEAL) |
 | `PO_MODEL` | `.env` | Modelo usado para geração de Page Objects |
-| `RAG_ENABLED` | `.env` | Ativa/desativa o RAG |
+| `RAG_ENABLED` | `cucumber.yml` | Ativa/desativa o RAG (perfis `rag` / `norag`) |
+| `RAG_KNOWLEDGE_BASE_DIR` | `cucumber.yml` | Pasta usada como base de conhecimento |
 | `RAG_EMBEDDING_MODEL` | `.env` | Modelo de embedding (OpenAI-compatible) |
 | `RAG_EMBEDDING_API_KEY` | `.env` | Chave para embeddings |
 | `RAG_EMBEDDING_BASE_URL` | `.env` | Base URL para embeddings |
-| `RAG_TOP_K` | `.env` | Documentos recuperados por consulta |
-| `RAG_MIN_SIMILARITY` | `.env` | Score mínimo para incluir documento |
+| `RAG_TOP_K` | `cucumber.yml` | Documentos recuperados por consulta |
+| `RAG_MIN_SIMILARITY` | `cucumber.yml` | Score mínimo para incluir documento |
 | `ENVIRONMENT_TYPE` | `cucumber.yml` | Ambiente de teste |
 | `BROWSER` | `cucumber.yml` | Browser de execução |
 
@@ -163,13 +166,13 @@ cuprite: BROWSER=cuprite
 
 ## 6. Adaptação para outros projetos
 
-Copie o exemplo de configuração:
+Copie o exemplo de design system:
 
 ```bash
-cp config/design_system.example.yml config/design_system.yml
+cp features/support/self_healing/config/design_system.example.yml features/support/self_healing/config/design_system.yml
 ```
 
-Edite `config/design_system.yml` para ensinar o SelfHealing sobre os componentes da sua aplicação:
+Edite `features/support/self_healing/config/design_system.yml` para ensinar o SelfHealing sobre os componentes da sua aplicação:
 
 - `interactive_selectors`: seletores considerados interativos no snapshot
 - `field_components`: componentes customizados que devem ser mapeados como campos
@@ -193,12 +196,19 @@ O RAG permite que o agente consulte uma base de conhecimento antes de executar u
 
 ### Como ativar
 
-1. Crie a pasta `features/support/self_healing/knowledge_base/` e adicione documentos `.md`, `.txt`, `.yml`, `.rb` ou `.feature`.
-2. Ative no `.env`:
+O profile `rag` do `cucumber.yml` já vem configurado para usar os Page Objects reais do projeto:
+
+```yaml
+rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0 RAG_KNOWLEDGE_BASE_DIR=features/pages
+```
+
+Basta executar com o perfil:
 
 ```bash
-RAG_ENABLED=true
+bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 ```
+
+Documentos extras de negócio, fluxos e validações podem ser mantidos em [`knowledge_base/`](knowledge_base/). Veja [`knowledge_base/README.md`](knowledge_base/README.md) para detalhes.
 
 ### Configurações disponíveis
 
@@ -221,7 +231,7 @@ Se `RAG_EMBEDDING_MODEL` estiver vazio, o sistema usa um embedder local por pala
 - `Rag::Embedder` — gera embeddings via API ou palavras-chave.
 - `Rag::Store` — armazena documentos em JSON local.
 - `Rag::Retriever` — busca documentos por similaridade de cosseno.
-- `Rag::KnowledgeBase` — indexa arquivos da pasta `knowledge_base/`.
+- `Rag::KnowledgeBase` — indexa arquivos da pasta configurada em `RAG_KNOWLEDGE_BASE_DIR`.
 
 ### Uso manual
 
@@ -232,6 +242,24 @@ kb.index!
 retriever = SelfHealing::Rag::Retriever.new
 puts retriever.context_for('como cadastrar um cliente')
 ```
+
+---
+
+## 8. Prompts e Contexto
+
+**Arquivos:** `prompts/*.md.erb` e `prompts/*.md`
+
+Os prompts ficam em `features/support/self_healing/prompts/` e definem o comportamento do agente:
+
+| Arquivo | Função |
+|---------|--------|
+| `system.md.erb` | Prompt principal do agente. Define estratégia de seletores, ferramentas disponíveis e regras genéricas. |
+| `page_object_design_system.md` | Design system usado na geração de Page Objects. |
+| `siteprism_generator.md.erb` | Template que instrui o modelo a gerar POs no padrão SitePrism. |
+| `heal.md.erb` | Prompt usado no modo HEAL para corrigir planos quebrados. |
+
+- Edite `system.md.erb` para mudar **como** o agente testa.
+- Use a `knowledge_base/` para ensinar **o que** testar.
 
 ---
 

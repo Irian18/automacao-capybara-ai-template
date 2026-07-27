@@ -1,9 +1,12 @@
 ---
-default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p local -p cuprite -p rag
+default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p local -p cuprite -p norag -p no_self_healing
 
 # Formatação
 pretty: --format pretty
 for_ci: --format progress
+
+# Browsers
+cuprite: BROWSER=cuprite
 
 # Ambientes de teste
 example: ENVIRONMENT_TYPE=example
@@ -14,8 +17,12 @@ prod: ENVIRONMENT_TYPE=prod
 prod_automacao_ci: ENVIRONMENT_TYPE=prod_automacao_ci
 
 # RAG
-rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0
+rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0 RAG_KNOWLEDGE_BASE_DIR=features/pages
 norag: RAG_ENABLED=false
+
+# Self Healing
+self_healing: SELF_HEALING_ENABLED=true
+no_self_healing: SELF_HEALING_ENABLED=false
 
 # Relatórios
 html: --format html --out=report/html_report/report.html

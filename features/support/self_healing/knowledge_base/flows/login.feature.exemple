@@ -1,0 +1,17 @@
+# language: pt
+Funcionalidade: Fluxo de Login
+
+  Cenário: Login padrão no sistema
+    Dado que o usuário acessou a página de login em "/login"
+    Quando preenche o campo de email "#email" com "usuario@exemplo.com"
+    E preenche o campo de senha "#password" com "senha123"
+    E clica no botão "#login-button"
+    Então o usuário é redirecionado para "/home"
+    E a mensagem "Bem-vindo à página inicial" é exibida
+
+  Cenário: Credenciais inválidas
+    Dado que o usuário acessou a página de login em "/login"
+    Quando preenche o campo de email "#email" com "invalido@exemplo.com"
+    E preenche o campo de senha "#password" com "senha_errada"
+    E clica no botão "#login-button"
+    Então a mensagem "E-mail ou senha inválidos" é exibida

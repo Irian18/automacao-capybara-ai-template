@@ -1,5 +1,6 @@
-Dado('que acessei a página de login') do
-  login.load_and_wait
+Dado('que acessei a página de login para debug') do
+  visit("")
+  binding.pry
 end
 
 Quando('faço login com {string} e {string}') do |email, senha|

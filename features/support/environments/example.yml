@@ -1,14 +1,14 @@
 # Exemplo de configuração de ambiente
 # Copie este arquivo para local.yml, staging.yml, etc. e preencha os dados da sua aplicação.
 
-url_home: https://sua-aplicacao.com.br
+url_home: https://www.saucedemo.com/
 base_uri: https://api.sua-aplicacao.com.br
 
 headless_mode: false
 
 # Credenciais de acesso ao front-end
-email: 'usuario@exemplo.com'
-password: 'senha'
+email: standard_user
+password: secret_sauce
 token: 'token_opcional'
 
 # Credenciais de API
@@ -21,7 +21,7 @@ email_api_exposed: 'exposed@exemplo.com'
 password_api_exposed: 'senha_exposed'
 token_api_exposed: 'token_exposed_opcional'
 
-log: true
+log: false
 
 # Configurações de execução
 TEST_ENV_NUMBER: 3

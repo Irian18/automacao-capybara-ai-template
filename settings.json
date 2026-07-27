@@ -79,5 +79,7 @@
   "editor.suggestOnTriggerCharacters": false,
   "files.associations": {
     "*.feature": "feature"
-  }
+  },
+  "terminal.integrated.defaultProfile.windows": "CommandPrompt",
+  "terminal.external.windowsExec": "C:\\Windows\\System32\\cmd.exe"
 }
