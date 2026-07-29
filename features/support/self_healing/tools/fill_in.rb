@@ -21,9 +21,7 @@ module SelfHealing
 
       def execute(input)
         with_retry do
-          session.fill_in(input['field'], with: input['value'])
-        rescue Capybara::ElementNotFound
-          el = session.find(input['field'], wait: 5)
+          el = session.find(input['field'], wait: 3)
           el.set(input['value'])
         end
         'OK'

@@ -290,7 +290,12 @@ module SelfHealing
       return '' if instruction.nil? || instruction.strip.empty?
       return '' unless @rag
 
-      @rag_context_cache[instruction] ||= @rag.context_for(instruction)
+      @rag_context_cache[instruction] ||= begin
+        context = @rag.context_for(instruction)
+        doc_count = context.to_s.scan(/\[score:/).size
+        @context.logger.info("[SelfHealing] RAG recuperou #{doc_count} documentos para instrução")
+        context
+      end
     rescue StandardError => e
       @context.logger.warn("[SelfHealing] Falha ao recuperar contexto RAG: #{e.class}: #{e.message}")
       ''

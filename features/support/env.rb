@@ -137,7 +137,7 @@ Capybara.configure do |config|
   config.app_host = CONFIG['url_home']
   config.always_include_port = false
   config.raise_server_errors = false
-  config.default_max_wait_time = 60
+  config.default_max_wait_time = 10
   config.default_retry_interval = 0.1
   config.automatic_reload = true
   config.predicates_wait = true
