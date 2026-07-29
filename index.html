@@ -325,6 +325,7 @@
         <li><a href="#funcionalidades">Funcionalidades</a></li>
         <li><a href="#historico">Histórico</a></li>
         <li><a href="#arquitetura">Arquitetura</a></li>
+        <li><a href="#processo">Processo</a></li>
         <li><a href="#como-usar">Como Usar</a></li>
         <li><a href="#tecnologias">Tecnologias</a></li>
       </ul>
@@ -627,6 +628,15 @@ bundle exec cucumber -p self_healing features/specs/self_healing/login_self_heal
 # Self Healing + RAG habilitados
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 
+# Executar instrução em linguagem natural via rake task
+bundle exec rake self_healing:run["Preencha o formulário de login"]
+
+# Executar cenários .feature de self healing via rake task
+bundle exec rake self_healing:run_features
+
+# Forçar re-descoberta de planos (ignora cache)
+AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
+
 # Gerar relatório Allure
 allure serve report/allure-results</code>
       </div>
@@ -672,11 +682,98 @@ allure serve report/allure-results</code>
       </div>
     </section>
 
+    <section id="processo" class="about">
+      <h2>⚙️ Processo de execução</h2>
+      <p>
+        Quando os perfis <code>self_healing</code> e/ou <code>rag</code> estão ativos, a execução
+        segue fluxos bem definidos: o Self Healing trabalha no ciclo <strong>RECORD → REPLAY → HEAL</strong>,
+        enquanto o RAG realiza <strong>indexação → recuperação → injeção de contexto</strong>.
+      </p>
+
+      <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent);">Self Healing — RECORD / REPLAY / HEAL</h3>
+      <pre class="diagram"><code>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. CARGA                                                                    │
+│    - env.rb carrega agent.rb quando SELF_HEALING_ENABLED=true               │
+│    - O cenário instancia SelfHealing::Agent com o contexto atual            │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. CONSULTA AO CACHE                                                        │
+│    - O agente verifica se já existe um plano para a instrução               │
+│    - Se não existir (ou AI_FORCE_RECORD=true), vai para RECORD              │
+│    - Se existir, tenta REPLAY                                               │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. RECORD                                                                   │
+│    - Snapshot do HTML é capturado                                           │
+│    - Se RAG estiver ativo, recupera contexto dos Page Objects reais         │
+│    - Prompt (instrução + snapshot + contexto) é enviado à LLM               │
+│    - A LLM retorna uma sequência de ferramentas                             │
+│    - Cada ferramenta é executada (click, fill_in, assert, etc.)             │
+│    - Plano bem-sucedido é salvo em cache (PlanCache)                        │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. REPLAY                                                                   │
+│    - Plano cacheado é executado sem chamada à LLM                           │
+│    - Ferramentas rodam na ordem gravada                                     │
+│    - Rápido e sem custo de API                                              │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. HEAL                                                                     │
+│    - Se REPLAY falha, identifica a ferramenta quebrada                      │
+│    - Novo snapshot é tirado                                                 │
+│    - Apenas o passo quebrado é enviado à LLM para correção                  │
+│    - Plano cacheado é atualizado                                            │
+└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
+
+      <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent);">RAG — indexação e recuperação</h3>
+      <pre class="diagram"><code>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. INICIALIZAÇÃO                                                            │
+│    - RAG_ENABLED=true carrega rag.rb                                        │
+│    - RAG_KNOWLEDGE_BASE_DIR aponta para features/pages                      │
+│      e features/support/self_healing/knowledge_base                         │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. INDEXAÇÃO                                                                │
+│    - KnowledgeBase escaneia os diretórios configurados                      │
+│    - Arquivos .md, .txt, .yml, .yaml e .feature são lidos                   │
+│    - Cada arquivo vira um Document                                          │
+│    - Embedder gera vetores e Store persiste em rag_store/                   │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. RECUPERAÇÃO                                                              │
+│    - A instrução do agente é convertida em vetor                            │
+│    - Retriever busca os RAG_TOP_K documentos mais similares                 │
+│    - Documentos abaixo de RAG_MIN_SIMILARITY são descartados                │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. INJEÇÃO DE CONTEXTO                                                      │
+│    - Documentos recuperados são formatados e adicionados ao prompt          │
+│    - A LLM usa esse contexto para gerar/corrigir planos e seletores        │
+└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    </section>
+
     <section id="quando-usar" class="about">
       <h2>🤔 Quando usar cada combinação</h2>
       <p>
-        Self Healing e RAG são independentes. Você pode ligar um, outro, ambos ou nenhum,
-        dependendo do momento do projeto e do tipo de estabilidade da interface.
+        Self Healing e RAG trabalham juntos. O RAG é um contexto adicional para o Self Healing:
+        você pode usar <code>self_healing</code> sozinho, mas se também usar <code>rag</code>,
+        o agente consulta a base de conhecimento antes de gerar ou corrigir planos.
       </p>
       <div class="cards">
         <article class="card">
@@ -715,11 +812,11 @@ allure serve report/allure-results</code>
         <article class="card">
           <h3>Só RAG</h3>
           <p>
-            Útil para geração ou revisão de Page Objects assistida por IA, mesmo sem precisar
-            de autocorreção em tempo de execução.
+            Não tem efeito prático sozinho, pois o agente de Self Healing não é carregado.
+            Use sempre em conjunto com <code>-p self_healing</code>.
           </p>
           <div class="code-block">
-            <code>bundle exec cucumber -p rag</code>
+            <code>bundle exec cucumber -p self_healing -p rag</code>
           </div>
         </article>
       </div>
