@@ -436,23 +436,26 @@ O projeto inclui um workflow em `.github/workflows/ci.yml` que executa a suíte 
 
 1. Crie um novo repositório público no GitHub, por exemplo:
    ```
-   capybara-self-healing-locators-reports
+   capybara-ia-allure-report
    ```
 2. No repositório de relatórios, vá em **Settings → Pages**.
 3. Em **Source**, selecione **Deploy from a branch** e escolha `gh-pages`.
 4. No repositório principal, configure o secret:
    - Vá em **Settings → Secrets and variables → Actions**.
    - Crie um secret chamado `ALLURE_REPORTS_TOKEN` com um **Personal Access Token (PAT)** que tenha permissão de escrita no repositório de relatórios.
-5. (Opcional) Configure a variável `ALLURE_REPORTS_REPO` com o nome completo do repositório de destino, ex: `Irian18/capybara-self-healing-locators-reports`. Se não configurar, o workflow usa o padrão.
+5. (Opcional) Configure a variável `ALLURE_REPORTS_REPO` com o nome completo do repositório de destino, ex: `Irian18/capybara-ia-allure-report`. Se não configurar, o workflow usa o padrão.
 
 ### URL do relatório
 
 Após a primeira execução bem-sucedida na `main`, o relatório estará disponível em:
 ```
-https://<usuario>.github.io/capybara-self-healing-locators-reports/<run_number>/
+https://<usuario>.github.io/capybara-ia-allure-report/
 ```
 
-Cada execução gera uma pasta separada (`<run_number>`), mantendo o histórico de relatórios.
+A raiz sempre mostra o relatório da **última execução**. O histórico fica disponível em:
+```
+https://<usuario>.github.io/capybara-ia-allure-report/<run_number>/
+```
 
 ### Variáveis de ambiente no CI
 

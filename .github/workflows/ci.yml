@@ -71,7 +71,18 @@ jobs:
           path: report/allure_report_html
           retention-days: 7
 
-      - name: Deploy Allure Report to external repository
+      - name: Deploy Allure Report to external repository (root)
+        if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.ALLURE_REPORTS_TOKEN }}
+          external_repository: ${{ vars.ALLURE_REPORTS_REPO || 'Irian18/capybara-ia-allure-report' }}
+          publish_branch: gh-pages
+          publish_dir: report/allure_report_html
+          destination_dir: .
+          keep_files: true
+
+      - name: Deploy Allure Report to external repository (run history)
         if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         uses: peaceiris/actions-gh-pages@v4
         with:
