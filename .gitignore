@@ -18,6 +18,7 @@ features/support/credentials/*
 features/support/self_healing/plans/
 features/support/self_healing/rag_store/
 features/support/self_healing/tmp/
+features/support/self_healing/locator_history.json
 
 *.deb
 google-chrome-stable_current_amd64.deb

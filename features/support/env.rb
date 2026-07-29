@@ -26,12 +26,8 @@ require 'socket'
 require 'capybara/cuprite'
 require 'ferrum'
 require 'dotenv/load'
-require_relative 'page_helper'
-require_relative 'helpers/helper'
-require_relative 'helpers/service_helper'
-require_relative 'helpers/intercept_request_helper'
 require 'matrix'
-require_relative 'helpers/siteprism_helper'
+require_relative 'page_helper'
 require_relative 'self_healing/agent' if ENV['SELF_HEALING_ENABLED'] == 'true'
 
 Dir[File.join(File.dirname(__FILE__), 'helpers', '*.rb')].sort.each { |file| require_relative file }
@@ -49,11 +45,8 @@ World(TestEnvironmentManagerHelper)
 World(Helper)
 World(SitePrismHelper)
 
-# World(Interceptor)
-
 ENVIRONMENT_TYPE = ENV['ENVIRONMENT_TYPE']
 CONFIG = YAML.load_file(File.dirname(__FILE__) + "/environments/#{ENVIRONMENT_TYPE}.yml")
-
 
 HashHelper.initialize_hash_credentials
 HashHelper.initialize_hash_response_error
@@ -87,10 +80,8 @@ Capybara.register_driver :cuprite do |app|
     timeout: 10,
     process_timeout: 10,
     headless: @headless_mode,
-    browser_options:,
+    browser_options: browser_options,
     base_url: CONFIG['url_home']
-    # ,
-    # window_size: [1280, 1080]
   }
 
   Capybara::Cuprite::Driver.new(app, driver_options)
@@ -120,7 +111,7 @@ Before do
       bounds = page.driver.browser.command('Browser.getWindowBounds', windowId: result['windowId'])
       w = bounds['bounds']['width']
       h = bounds['bounds']['height']
-      
+
       page.driver.browser.page.command(
         'Emulation.setDeviceMetricsOverride',
         width: w,
