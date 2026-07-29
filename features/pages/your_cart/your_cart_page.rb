@@ -6,7 +6,7 @@ class CartItemSection < SitePrism::Section
   element :btn_remove_button_id, '#remove-sauce-labs-backpack'
 
   def remove
-    remove_button.click
+    btn_remove_button_id.click
   end
 end
 
@@ -20,18 +20,18 @@ class YourCartPage < SitePrism::Page
   element :btn_checkout_id, '#checkout'
 
   sections :cart_items, CartItemSection, '[data-test="inventory-item"]'
-  section :primary_header, PrimaryHeader, 'data-test="primary-header"'
+  section :primary_header, PrimaryHeader, '[data-test="primary-header"]'
   section :secondary_header, SecondaryHeaderSection, '[data-test="secondary-header"]'
 
   def go_to_checkout
-    checkout_button.click
+    btn_checkout.click
   end
 
   def continue_shopping
-    continue_shopping_button.click
+    btn_continue_shopping.click
   end
 
   def find_cart_item_by_name(name)
-    cart_items.find { |item| item.title.text == name }
+    cart_items.find { |item| item.label_title.text == name }
   end
 end

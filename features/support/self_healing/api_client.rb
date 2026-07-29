@@ -1,12 +1,7 @@
-# frozen_string_literal: true
-
 require 'openai'
 require_relative 'config'
 
 module SelfHealing
-  # Cliente para APIs compatíveis com OpenAI.
-  # Suporta chat completions e completions, com retry e fallback
-  # para reasoning_content quando content estiver vazio.
   class ApiClient
     DEFAULT_MAX_RETRIES = 3
     DEFAULT_TIMEOUT = 60

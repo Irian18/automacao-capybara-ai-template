@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require_relative 'rag/document'
 require_relative 'rag/embedder'
 require_relative 'rag/store'

@@ -1,10 +1,6 @@
-# frozen_string_literal: true
-
 require 'json'
 
 module SelfHealing
-  # Gerencia o histórico de mensagens trocadas com a LLM.
-  # Abstrai a montagem de mensagens system/user/tool.
   class Conversation
     def initialize
       @messages = []

@@ -5,11 +5,11 @@ class LoginPage < SitePrism::Page
   set_url ''
 
   element :in_user_id, '#user-name'
-  element :in_user_data_test, 'inpu[data-test="username"]'
+  element :in_user_data_test, 'input[data-test="username"]'
   element :in_password_id, '#password'
-  element :in_password_data_test, 'inpu[data-test="password"]'
+  element :in_password_data_test, 'input[data-test="password"]'
   element :bt_submit_id, '#login-button'
-  element :bt_submit_id_data_test, 'data-test="login-button"'
+  element :bt_submit_id_data_test, '[data-test="login-button"]'
   element :msg_error_containet, '.error-message-container'
 
   def logar_usuario(user, password)

@@ -1,12 +1,8 @@
-# frozen_string_literal: true
-
 require_relative 'base'
 require_relative 'context'
 
 module SelfHealing
   module Tools
-    # Registry que carrega e dispatcha as ferramentas do agente.
-    # Cada tool é uma classe em self_healing/tools/ que herda de Base.
     class Registry
       TOOL_CLASSES = %w[
         inspect_page

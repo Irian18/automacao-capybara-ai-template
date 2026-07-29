@@ -9,13 +9,7 @@ class InventoryItemSection < SitePrism::Section
     btn_add_to_cart.click
   end
 
-  def btn_to_cart
-    btn_to_cart.click
-  end
 
-  def label_prince
-    label_price
-  end
 end
 
 class ProductsPage < SitePrism::Page

@@ -1,7 +1,4 @@
-# frozen_string_literal: true
-
 module SelfHealing
-  # Executa planos cacheados passo a passo, delegando cada ação para as Tools.
   class PlanExecutor
     StepResult = Struct.new(:success, :step_index, :step, :error, :tool_result, keyword_init: true)
 

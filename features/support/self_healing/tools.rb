@@ -1,12 +1,7 @@
-# frozen_string_literal: true
-
 require_relative 'tools/context'
 require_relative 'tools/registry'
 
 module SelfHealing
-  # Fachada para o registro de ferramentas do agente.
-  # Mantém a API pública original (definitions/dispatch) enquanto
-  # internamente usa o padrão Strategy com uma classe por tool.
   module Tools
     module_function
 

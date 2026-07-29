@@ -1,13 +1,9 @@
-# frozen_string_literal: true
-
 require_relative '../config'
 require_relative 'store'
 require_relative 'embedder'
 
 module SelfHealing
   module Rag
-    # Busca documentos relevantes na knowledge base usando similaridade de cosseno.
-    # Suporta filtros por metadata e cache de queries recentes.
     class Retriever
       Result = Struct.new(:document, :score, keyword_init: true)
 

@@ -19,7 +19,7 @@ namespace :cucumber do
   end
 end
 
-namespace :self_healing do
+namespace :ai do
   desc 'Executar specs unitários do SelfHealing'
   task :spec do
     sh "bundle exec ruby -I#{File.expand_path('features/support/self_healing/spec')} -e \"Dir['features/support/self_healing/spec/**/*_spec.rb'].each { |f| require File.expand_path(f) }\""
@@ -38,7 +38,7 @@ namespace :self_healing do
 
     instruction = args[:instruction]
     if instruction.nil? || instruction.empty?
-      raise 'Informe a instrução: rake self_healing:run["fazer login com standard_user"]'
+      raise 'Informe a instrução: rake ai:run["fazer login com standard_user"]'
     end
 
     Capybara.current_session.visit(CONFIG['url_home'])

@@ -1,0 +1,101 @@
+name: CI - E2E Tests with Allure Report
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Create .env
+        run: |
+          cp .env.example .env
+          # Se quiser usar Self Healing/RAG no CI, descomente e configure:
+          # echo "AI_API_KEY=${{ secrets.AI_API_KEY }}" >> .env
+
+      - name: Run Cucumber tests
+        id: cucumber
+        continue-on-error: true
+        run: |
+          bundle exec cucumber -p ci -p for_ci -p allure -p no_self_healing --publish-quiet --format progress --retry 2 -t "not @wip"
+        env:
+          ENVIRONMENT_TYPE: ci
+          BROWSER: cuprite
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate report/allure_results -o report/allure_report_html --clean
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: report/allure_results
+          retention-days: 7
+
+      - name: Upload Allure HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-html
+          path: report/allure_report_html
+          retention-days: 7
+
+      - name: Setup GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: report/allure_report_html
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Fail if tests failed
+        if: steps.cucumber.outcome == 'failure'
+        run: |
+          echo "::error::Alguns cenários de teste falharam. Verifique o relatório Allure para detalhes."
+          exit 1

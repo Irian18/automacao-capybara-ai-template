@@ -19,8 +19,6 @@ module SelfHealing
       end
     end
 
-    # Gera embeddings via API compatível com OpenAI.
-    # Usa RAG_EMBEDDING_API_KEY / RAG_EMBEDDING_BASE_URL / RAG_EMBEDDING_MODEL.
     class ApiEmbedder < Embedder
       def initialize(
         api_key: Config.rag_embedding_api_key,
@@ -56,8 +54,6 @@ module SelfHealing
       end
     end
 
-    # Fallback sem custo de API: vetor de frequência de termos normalizado.
-    # Útil para testes locais ou quando o modelo de embedding não está disponível.
     class KeywordEmbedder < Embedder
       DIMENSIONS = 256
 

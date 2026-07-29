@@ -1,10 +1,6 @@
-# frozen_string_literal: true
-
 require_relative 'design_system'
 
 module SelfHealing
-  # Captura um snapshot estruturado da página atual para a LLM.
-  # Foca em elementos interativos, removendo ruído e IDs instáveis.
   class Snapshot
     MAX_ELEMENTS = 100
     TEXT_EXCERPT_LIMIT = 1500

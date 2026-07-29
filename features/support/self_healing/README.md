@@ -6,8 +6,8 @@ Este diretório contém o framework de Self Healing e RAG do projeto.
 
 ```text
 features/support/self_healing/
-├── config/              # Configurações imutáveis
-│   ├── config.rb
+├── config.rb            # Configurações imutáveis
+├── config/              # Arquivos de configuração de exemplo
 │   └── design_system.yml
 ├── rag/                 # Componentes do RAG (Retrieval-Augmented Generation)
 │   ├── document.rb
@@ -143,11 +143,11 @@ O arquivo `agent.rb` é o orquestrador principal, carregado por `features/suppor
 
 ```bash
 # Executar uma instrução diretamente
-bundle exec rake self_healing:run["Preencha o formulário de login"]
+bundle exec rake ai:run["Preencha o formulário de login"]
 
 # Executar cenários de arquivos .feature
-bundle exec rake self_healing:run_features
+bundle exec rake ai:run_features
 
 # Forçar re-descoberta (ignora planos cacheados)
-AI_FORCE_RECORD=true bundle exec rake self_healing:run_features
+AI_FORCE_RECORD=true bundle exec rake ai:run_features
 ```

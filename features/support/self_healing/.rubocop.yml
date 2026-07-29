@@ -1,6 +1,3 @@
-# RuboCop local para o módulo SelfHealing.
-# Herda as regras do projeto, mas ajusta métricas para código de agente ReAct.
-
 AllCops:
   NewCops: enable
   SuggestExtensions: false

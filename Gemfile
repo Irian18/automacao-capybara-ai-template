@@ -1,9 +1,8 @@
-require 'win32ole' if Gem.win_platform?
-
 source 'https://rubygems.org'
 
 ruby '~> 3.3.0'
 
+gem 'rake'
 gem 'capybara', '~> 3.40.0' # Requer Ruby 3.0+ [^16^]
 gem 'cpf_faker'
 gem 'cucumber', '~> 9.2.0'

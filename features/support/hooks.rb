@@ -219,7 +219,11 @@ at_exit do
 
   system('rm -rf tmp/capybara/report/videos')
   system('rm -rf tmp/capybara/report/screenshots')
-  system('rm -rf report/allure_results/*')
+
+  # Em CI preservamos os resultados do Allure para geração do relatório
+  unless environment_type == 'ci'
+    system('rm -rf report/allure_results/*')
+  end
 
   helper.terminate_chrome_browser
 end

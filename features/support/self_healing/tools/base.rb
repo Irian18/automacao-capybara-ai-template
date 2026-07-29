@@ -1,12 +1,8 @@
-# frozen_string_literal: true
-
 require 'capybara'
 require 'ferrum'
 
 module SelfHealing
   module Tools
-    # Classe base para todas as ferramentas do agente.
-    # Cada tool deve implementar #definition e #execute.
     class Base
       RETRYABLE_ERRORS = [
         Capybara::ElementNotFound,
@@ -20,17 +16,14 @@ module SelfHealing
         @context = context
       end
 
-      # Descrição da tool no formato OpenAI.
       def definition
         raise NotImplementedError
       end
 
-      # Executa a tool e retorna uma string como resultado.
       def execute(input)
         raise NotImplementedError
       end
 
-      # Indica se esta tool deve ser gravada no plano cacheado.
       def recordable?
         true
       end

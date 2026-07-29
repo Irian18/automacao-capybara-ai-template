@@ -1,7 +1,4 @@
-# frozen_string_literal: true
-
 module SelfHealing
-  # Lê arquivos .feature e extrai cenários, tags e steps.
   class FeatureReader
     DEFAULT_STEP_KEYWORDS = %w[
       Given When Then And But *

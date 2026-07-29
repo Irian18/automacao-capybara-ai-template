@@ -1,13 +1,9 @@
-# frozen_string_literal: true
-
 require 'json'
 require 'fileutils'
 require 'digest'
 require 'time'
 
 module SelfHealing
-  # Persistência de planos cacheados gerados pelo agente.
-  # Suporta invalidação por hash de prompt e TTL opcional.
   class PlanCache
     PLANS_DIR = File.expand_path('plans', __dir__)
     DEFAULT_TTL_SECONDS = nil # nil = sem expiração

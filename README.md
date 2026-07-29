@@ -104,10 +104,10 @@ bundle exec cucumber -p self_healing features/specs/self_healing/login_self_heal
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 
 # Executar instrução em linguagem natural via rake task
-bundle exec rake self_healing:run["Preencha o formulário de login"]
+bundle exec rake ai:run["Preencha o formulário de login"]
 
 # Executar cenários .feature de self healing via rake task
-bundle exec rake self_healing:run_features
+bundle exec rake ai:run_features
 
 # Forçar re-descoberta de planos (ignora cache)
 AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
@@ -121,7 +121,7 @@ O arquivo [`cucumber.yml`](cucumber.yml) centraliza os **perfis** do Cucumber, c
 
 | Perfil | Descrição |
 |--------|-----------|
-| `default` | Perfil ativado automaticamente. Combina `pretty`, `example`, `allure`, `routes_name`, `local`, `cuprite`, `norag`, `no_self_healing` e exclui cenários `@wip`. |
+| `default` | Perfil ativado automaticamente. Combina `pretty`, `example`, `allure`, `routes_name`, `cuprite`, `norag`, `no_self_healing` e exclui cenários `@wip`. |
 | `pretty` / `for_ci` | Formatação do console (`pretty` para local, `progress` para CI). |
 | `example` / `local` / `staging` / `sandbox` / `prod` / `prod_automacao_ci` | Define o `ENVIRONMENT_TYPE` correspondente. |
 | `allure` / `html` / `json` | Gera relatórios nos formatos indicados. |
@@ -387,15 +387,15 @@ bundle exec cucumber -p self_healing -p rag features/specs/rag_tutorial.feature
 Com `self_healing` apenas, o step pede uma ação específica:
 
 ```ruby
-# features/step_definitions/self_healing/login_self_healing_steps.rb
-@agent.execute('Acesse a página de login')
-@agent.execute("Preencha o campo de e-mail com '#{email}'")
+agent = SelfHealing::Agent.new
+agent.execute('Acesse a página de login')
+agent.execute("Preencha o campo de e-mail com '#{email}'")
 ```
 
 Com `self_healing` + `rag`, a instrução pode ser mais genérica, porque a IA recupera os seletores e métodos dos Page Objects reais:
 
 ```ruby
-# features/step_definitions/rag_tutorial_steps.rb
+agent = SelfHealing::Agent.new
 agent.execute('Faça login com as credenciais válidas do sistema')
 ```
 
@@ -407,14 +407,56 @@ Documentação completa da camada de Self Healing (modos de operação, configur
 
 ```bash
 # Executar com tag
-bundle exec cucumber -t @exemplo
+bundle exec cucumber -t @login
 
 # Forçar re-descoberta de planos da IA
-AI_FORCE_RECORD=true bundle exec cucumber features/specs/exemplo.feature
+AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
 
 # Rubocop
 bundle exec rubocop
 bundle exec rubocop -a
+```
+
+---
+
+## 🔄 CI/CD com GitHub Actions
+
+O projeto inclui um workflow em `.github/workflows/ci.yml` que executa a suíte E2E em toda push/PR para `main`/`master` e publica o relatório Allure.
+
+### O que o workflow faz
+
+1. Instala Ruby 3.3 e dependências do Bundler.
+2. Instala Google Chrome e ffmpeg.
+3. Executa os testes com o perfil `ci` (`ENVIRONMENT_TYPE=ci`, headless).
+4. Gera o relatório Allure HTML.
+5. Faz upload dos resultados e do relatório como artifacts.
+6. Publica o relatório no GitHub Pages (apenas na branch principal).
+
+### Ativar o GitHub Pages
+
+1. Vá em **Settings → Pages** do repositório.
+2. Em **Source**, selecione **GitHub Actions**.
+3. Após a primeira execução bem-sucedida na `main`, o relatório estará disponível em:
+   ```
+   https://<usuario>.github.io/capybara-self-healing-locators
+   ```
+
+### Variáveis de ambiente no CI
+
+Para usar Self Healing ou RAG no CI, configure o secret no GitHub:
+
+- `AI_API_KEY` — chave da API de IA.
+
+Depois descomente a linha correspondente no workflow:
+
+```yaml
+# echo "AI_API_KEY=${{ secrets.AI_API_KEY }}" >> .env
+```
+
+### Executar localmente no modo CI
+
+```bash
+bundle exec cucumber -p ci -p for_ci -p allure -p no_self_healing --format progress -t "not @wip"
 ```
 
 ---

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'fileutils'
 require_relative 'api_client'
 require_relative 'config'
@@ -56,22 +54,18 @@ module SelfHealing
     def extract_ruby_code(raw)
       text = raw.to_s
 
-      # Tenta extrair o primeiro bloco ```ruby ... ```
       if text =~ /```ruby\s*(.*?)\s*```/m
         code = Regexp.last_match(1).strip
         return code unless code.empty?
       end
 
-      # Tenta extrair qualquer bloco ``` ... ``` que pareça Ruby
       text.scan(/```\s*(.*?)\s*```/m).each do |match|
         candidate = match[0].to_s.strip
         return candidate if looks_like_ruby?(candidate)
       end
 
-      # Se não houver blocos markdown, usa o texto todo se parecer Ruby
       return text.strip if looks_like_ruby?(text)
 
-      # Fallback: envolve em comentário para não quebrar syntax check
       "# Código gerado não parece Ruby válido. Resposta bruta:\n# #{text.strip.gsub("\n", "\n# ")}"
     end
 

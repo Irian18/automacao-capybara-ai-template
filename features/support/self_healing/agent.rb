@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'logger'
 require 'json'
 require_relative 'config'
@@ -13,9 +11,6 @@ require_relative 'rag'
 require_relative 'locator_history'
 
 module SelfHealing
-  # Orquestrador do SelfHealing.
-  # Coordena os modos RECORD, REPLAY e HEAL para executar instruções
-  # em linguagem natural sobre aplicações web.
   class Agent
     MAX_ITERATIONS = 15
 

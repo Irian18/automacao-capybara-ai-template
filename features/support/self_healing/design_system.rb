@@ -1,11 +1,7 @@
-# frozen_string_literal: true
-
 require 'yaml'
 require_relative 'config'
 
 module SelfHealing
-  # Carrega configuração de design system para identificar seletores,
-  # IDs instáveis e componentes customizados da aplicação.
   class DesignSystem
     DEFAULTS = {
       'interactive_selectors' => [

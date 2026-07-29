@@ -1,9 +1,4 @@
-# frozen_string_literal: true
-
 module SelfHealing
-  # Configurações centralizadas do SelfHealing.
-  # Todos os valores podem ser sobrescritos via variáveis de ambiente.
-  # Os valores padrão estão documentados no .env.example.
   module Config
     class << self
       def api_key

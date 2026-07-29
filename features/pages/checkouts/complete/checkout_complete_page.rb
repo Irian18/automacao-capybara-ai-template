@@ -1,8 +1,6 @@
 class CheckoutCompletePage < SitePrism::Page
   element :btn_back_products, '#back-to-products'
-  element :btn_generate_pdf_order, '#generate-pdf-order'
-  
-  section :primary_header, PrimaryHeader, 'data-test="primary-header"'
-  section :secondary_header, SecondaryHeaderSection, '[data-test="secondary-header"]'
 
+  section :primary_header, PrimaryHeader, '[data-test="primary-header"]'
+  section :secondary_header, SecondaryHeaderSection, '[data-test="secondary-header"]'
 end

@@ -31,6 +31,6 @@ module Pages
   end
 
   def footer
-    @footer ||= FootertPage.new
+    @footer ||= FooterPage.new
   end
 end

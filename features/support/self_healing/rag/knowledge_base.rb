@@ -26,9 +26,6 @@ module SelfHealing
         @embedder = embedder
       end
 
-      # Indexa todos os arquivos suportados dentro da knowledge base.
-      # Remove do índice arquivos que não existem mais.
-      # Se a base não mudou desde a última indexação, não faz nada.
       def index!
         return :fresh if fresh?
 
@@ -50,8 +47,6 @@ module SelfHealing
         documents.size
       end
 
-      # Verifica se a base de conhecimento foi indexada recentemente e
-      # nenhum arquivo mudou desde então.
       def fresh?
         meta = @store.get(INDEX_META_ID)
         return false unless meta
@@ -67,7 +62,6 @@ module SelfHealing
         false
       end
 
-      # Indexa um único arquivo ou texto.
       def add_text(content, id:, source: nil, metadata: {})
         doc = Document.new(
           id:,
