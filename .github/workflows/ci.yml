@@ -44,7 +44,7 @@ jobs:
         id: cucumber
         continue-on-error: true
         run: |
-          bundle exec cucumber -p ci -p for_ci -p allure -p no_self_healing --publish-quiet --format progress --retry 2 -t "not @wip"
+          bundle exec cucumber -p ci -p for_ci -p allure -p no_self_healing -p norag --publish-quiet --format progress --retry 2 -t "not @wip"
         env:
           ENVIRONMENT_TYPE: ci
           BROWSER: cuprite
