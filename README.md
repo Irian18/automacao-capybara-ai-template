@@ -421,7 +421,7 @@ bundle exec rubocop -a
 
 ## 🔄 CI/CD com GitHub Actions
 
-O projeto inclui um workflow em `.github/workflows/ci.yml` que executa a suíte E2E em toda push/PR para `main`/`master` e publica o relatório Allure.
+O projeto inclui um workflow em `.github/workflows/ci.yml` que executa a suíte E2E em toda push/PR para `main`/`master` e publica o relatório Allure em um **repositório separado**, para não sobrescrever o `index.html` do projeto.
 
 ### O que o workflow faz
 
@@ -430,16 +430,29 @@ O projeto inclui um workflow em `.github/workflows/ci.yml` que executa a suíte 
 3. Executa os testes com o perfil `ci` (`ENVIRONMENT_TYPE=ci`, headless).
 4. Gera o relatório Allure HTML.
 5. Faz upload dos resultados e do relatório como artifacts.
-6. Publica o relatório no GitHub Pages (apenas na branch principal).
+6. Publica o relatório no GitHub Pages de um **repositório dedicado** (apenas na branch principal).
 
-### Ativar o GitHub Pages
+### Configurar o repositório de relatórios
 
-1. Vá em **Settings → Pages** do repositório.
-2. Em **Source**, selecione **GitHub Actions**.
-3. Após a primeira execução bem-sucedida na `main`, o relatório estará disponível em:
+1. Crie um novo repositório público no GitHub, por exemplo:
    ```
-   https://<usuario>.github.io/capybara-self-healing-locators
+   capybara-self-healing-locators-reports
    ```
+2. No repositório de relatórios, vá em **Settings → Pages**.
+3. Em **Source**, selecione **Deploy from a branch** e escolha `gh-pages`.
+4. No repositório principal, configure o secret:
+   - Vá em **Settings → Secrets and variables → Actions**.
+   - Crie um secret chamado `ALLURE_REPORTS_TOKEN` com um **Personal Access Token (PAT)** que tenha permissão de escrita no repositório de relatórios.
+5. (Opcional) Configure a variável `ALLURE_REPORTS_REPO` com o nome completo do repositório de destino, ex: `Irian18/capybara-self-healing-locators-reports`. Se não configurar, o workflow usa o padrão.
+
+### URL do relatório
+
+Após a primeira execução bem-sucedida na `main`, o relatório estará disponível em:
+```
+https://<usuario>.github.io/capybara-self-healing-locators-reports/<run_number>/
+```
+
+Cada execução gera uma pasta separada (`<run_number>`), mantendo o histórico de relatórios.
 
 ### Variáveis de ambiente no CI
 

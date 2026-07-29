@@ -9,20 +9,12 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: false
+  actions: read
 
 jobs:
   test:
     name: Run E2E Tests
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -79,20 +71,16 @@ jobs:
           path: report/allure_report_html
           retention-days: 7
 
-      - name: Setup GitHub Pages
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages Artifact
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy Allure Report to external repository
+        if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: report/allure_report_html
-
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        id: deployment
-        uses: actions/deploy-pages@v4
+          personal_token: ${{ secrets.ALLURE_REPORTS_TOKEN }}
+          external_repository: ${{ vars.ALLURE_REPORTS_REPO || 'Irian18/capybara-ia-allure-report' }}
+          publish_branch: gh-pages
+          publish_dir: report/allure_report_html
+          destination_dir: ${{ github.run_number }}
+          keep_files: true
 
       - name: Fail if tests failed
         if: steps.cucumber.outcome == 'failure'
