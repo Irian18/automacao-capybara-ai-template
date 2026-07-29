@@ -398,9 +398,9 @@
         <article class="card">
           <h3>🧠 Self Healing Locators</h3>
           <p>
-            Quando um elemento não é encontrado, a IA propõe um novo seletor com base na DOM atual.
-            Cada mudança é versionada e salva em <code>locator_history.json</code>, permitindo revisão
-            manual antes de tornar a correção definitiva.
+            Self Healing Locators não substitui boas práticas de automação, 
+            mas atua como uma rede de segurança: reduz a fragilidade dos testes diante de mudanças na UI, 
+            mantém o histórico de alterações para auditoria e libera o time de QA para focar em cenários de maior valor.
           </p>
           <div class="tags">
             <span class="tag">IA</span>
@@ -414,9 +414,12 @@
         <article class="card">
           <h3>🔍 RAG — Retrieval Augmented Generation</h3>
           <p>
-            Indexa os arquivos de <code>features/pages</code> e os utiliza como contexto extra no prompt,
-            ajudando o modelo a sugerir seletores mais precisos e alinhados ao padrão do projeto.
-            Com RAG, a IA "conhece" a estrutura dos Page Objects e respeita as convenções do time.
+            RAG (Retrieval-Augmented Generation, ou Geração Aumentada por Recuperação).
+            Em vez de enviar apenas a pergunta para a IA, o sistema primeiro recupera documentos relacionados a um contexto e os injeta no prompt. 
+            Assim, a IA responde com base em informações reais e atualizadas, reduzindo alucinações e melhorando a precisão.
+            O RAG não corrige locators sozinho. Ele atua como um contexto adicional para o agente de Self Healing.
+            Em conjunto com o Self Healing formam uma camada inteligente de autopreservação da suíte de testes: 
+            o Self Healing age quando algo quebra, e o RAG garante que a correção seja feita com o máximo de contexto possível.
           </p>
           <div class="tags">
             <span class="tag">Contexto</span>
