@@ -360,6 +360,19 @@
         e <strong>RAG</strong>, que busca contexto nos Page Objects para enriquecer o prompt enviado ao modelo de IA.
       </p>
       <p>
+        O que o Self Healing faz?
+        O Self Healing não substitui os step definitions. Ele atua dentro dos steps quando um locator quebra.
+      </p>
+      <p>
+        O que o RAG faz?
+        O RAG fornece contexto adicional (como descrição de elementos das page objects) para o agente de Self Healing tomar decisões melhores. 
+        Ele também não substitui os step definitions.
+      </p>
+      <p>
+        O objetivo é reduzir a manutenção da suíte de testes, evitando falhas por mudanças de ID, classe ou estrutura
+        do DOM, e ao mesmo tempo manter a confiabilidade dos testes com histórico de alterações.
+      </p>
+      <p>
         Toda alteração de locator realizada pelo Self Healing é registrada em um histórico versionado
         (<code>features/support/self_healing/locator_history.json</code>). Isso permite que o time de QA revise
         manualmente cada mudança e verifique se o novo seletor realmente representa o mesmo elemento —
@@ -387,6 +400,10 @@
             <span class="tag">Auditoria</span>
             <span class="tag warning">Opcional</span>
           </div>
+          <div class="btn-group">
+            <a href="https://github.com/Irian18/capybara-self-healing-locators/blob/main/features/support/self_healing/README.md" class="btn btn-primary">Ver no GitHub</a>
+            <a href="README.md" class="btn btn-outline">Ler README</a>
+          </div>
         </article>
 
         <article class="card">
@@ -400,6 +417,10 @@
             <span class="tag">Contexto</span>
             <span class="tag">Page Objects</span>
             <span class="tag warning">Opcional</span>
+          </div>
+          <div class="btn-group">
+            <a href="https://github.com/Irian18/capybara-self-healing-locators/blob/main/features/support/self_healing/knowledge_base/README.md" class="btn btn-primary">Ver no GitHub</a>
+            <a href="README.md" class="btn btn-outline">Ler README</a>
           </div>
         </article>
 
@@ -629,10 +650,10 @@ bundle exec cucumber -p self_healing features/specs/self_healing/login_self_heal
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 
 # Executar instrução em linguagem natural via rake task
-bundle exec rake self_healing:run["Preencha o formulário de login"]
+bundle exec rake ai:run["Preencha o formulário de login"]
 
 # Executar cenários .feature de self healing via rake task
-bundle exec rake self_healing:run_features
+bundle exec rake ai:run_features
 
 # Forçar re-descoberta de planos (ignora cache)
 AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
