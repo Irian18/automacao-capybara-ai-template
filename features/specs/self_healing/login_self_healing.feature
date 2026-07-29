@@ -1,10 +1,13 @@
-# # language: pt
-# @self_healing @login
-# Funcionalidade: Login com SelfHealing
+# language: pt
+@login-self-healing
+Funcionalidade: Exemplo de fluxo de login
 
-#   Cenário: Login com sucesso usando instruções em linguagem natural
-#     Dado que acessei a página de login
-#     Quando preencho o email com "usuario@exemplo.com"
-#     E preencho a senha com "senha123"
-#     E clico no botão entrar
-#     Então devo ver a página inicial
+  Cenário: Login locked out
+    Dado que acessei a página de login
+    Quando faço login com usuário "locked_out_user" e senha "secret_sauce"
+    Então devo ver uma mensagem de erro "Epic sadface: Sorry, this user has been locked out." indicando que o usuário está bloqueado
+
+  Cenário: Login com sucesso
+    Dado que acessei a página de login
+    Quando faço login com usuário "standard_user" e senha "secret_sauce"
+    Então devo ser redirecionado para a página inicial com url "inventory.html" com nome "Products"

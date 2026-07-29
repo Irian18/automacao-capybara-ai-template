@@ -11,7 +11,12 @@ require 'pry-byebug'
 require 'httparty'
 require 'allure-cucumber'
 require 'allure-ruby-commons'
-require 'capybara/cucumber'
+if ENV['CUCUMBER_RUN'] == 'false'
+  require 'capybara/dsl'
+  require 'capybara/rspec/matchers'
+else
+  require 'capybara/cucumber'
+end
 require 'cucumber/core'
 require 'cucumber/core/filter'
 require 'json'
@@ -32,18 +37,20 @@ require_relative 'self_healing/agent' if ENV['SELF_HEALING_ENABLED'] == 'true'
 
 Dir[File.join(File.dirname(__FILE__), 'helpers', '*.rb')].sort.each { |file| require_relative file }
 
-World(HTTParty)
-World(Capybara::DSL)
-World(Capybara::RSpecMatchers)
-World(Pages)
-World(AppServices)
-World(CredentialsHelper)
-World(DriverHelper)
-World(GoogleSheetsHelper)
-World(HashHelper)
-World(TestEnvironmentManagerHelper)
-World(Helper)
-World(SitePrismHelper)
+if defined?(World)
+  World(HTTParty)
+  World(Capybara::DSL)
+  World(Capybara::RSpecMatchers)
+  World(Pages)
+  World(AppServices)
+  World(CredentialsHelper)
+  World(DriverHelper)
+  World(GoogleSheetsHelper)
+  World(HashHelper)
+  World(TestEnvironmentManagerHelper)
+  World(Helper)
+  World(SitePrismHelper)
+end
 
 ENVIRONMENT_TYPE = ENV['ENVIRONMENT_TYPE']
 CONFIG = YAML.load_file(File.dirname(__FILE__) + "/environments/#{ENVIRONMENT_TYPE}.yml")
@@ -91,34 +98,36 @@ Capybara.default_driver = :cuprite
 Capybara.javascript_driver = :cuprite
 Capybara.current_driver = :cuprite
 
-Before do
-  page.driver.add_headers(
-    'Origin' => CONFIG['url_home'],
-    'Referer' => CONFIG['url_home']
-  )
+if defined?(Before)
+  Before do
+    page.driver.add_headers(
+      'Origin' => CONFIG['url_home'],
+      'Referer' => CONFIG['url_home']
+    )
 
-  unless CONFIG['headless_mode']
-    targets = page.driver.browser.command('Target.getTargets')
-    page_target = targets['targetInfos']&.find { |t| t['type'] == 'page' }
-    if page_target
-      result = page.driver.browser.command('Browser.getWindowForTarget', targetId: page_target['targetId'])
-      page.driver.browser.command(
-        'Browser.setWindowBounds',
-        windowId: result['windowId'],
-        bounds: { windowState: 'maximized' }
-      )
-      sleep 0.3
-      bounds = page.driver.browser.command('Browser.getWindowBounds', windowId: result['windowId'])
-      w = bounds['bounds']['width']
-      h = bounds['bounds']['height']
+    unless CONFIG['headless_mode']
+      targets = page.driver.browser.command('Target.getTargets')
+      page_target = targets['targetInfos']&.find { |t| t['type'] == 'page' }
+      if page_target
+        result = page.driver.browser.command('Browser.getWindowForTarget', targetId: page_target['targetId'])
+        page.driver.browser.command(
+          'Browser.setWindowBounds',
+          windowId: result['windowId'],
+          bounds: { windowState: 'maximized' }
+        )
+        sleep 0.3
+        bounds = page.driver.browser.command('Browser.getWindowBounds', windowId: result['windowId'])
+        w = bounds['bounds']['width']
+        h = bounds['bounds']['height']
 
-      page.driver.browser.page.command(
-        'Emulation.setDeviceMetricsOverride',
-        width: w,
-        height: h,
-        deviceScaleFactor: 0,
-        mobile: false
-      )
+        page.driver.browser.page.command(
+          'Emulation.setDeviceMetricsOverride',
+          width: w,
+          height: h,
+          deviceScaleFactor: 0,
+          mobile: false
+        )
+      end
     end
   end
 end

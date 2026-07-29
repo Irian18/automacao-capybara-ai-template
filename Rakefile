@@ -57,8 +57,11 @@ namespace :ai do
     ENV['RAG_MIN_SIMILARITY'] ||= '0.0'
     ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages'
     ENV['ENVIRONMENT_TYPE'] ||= 'local'
+    ENV['CUCUMBER_RUN'] = 'false'
 
     require_relative 'features/support/env'
+    require_relative 'features/support/self_healing/feature_reader'
+    require_relative 'features/support/self_healing/tools'
 
     tag = args[:tag]
     features_dir = args[:features_dir] || 'features/specs/self_healing'
@@ -84,6 +87,7 @@ namespace :ai do
         puts "Resultado: #{result}"
       rescue StandardError => e
         puts "Falha: #{e.class}: #{e.message}"
+        puts e.backtrace.first(10).join("\n")
         failures << { scenario: scenario, error: e }
       end
     end

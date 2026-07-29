@@ -16,7 +16,7 @@ module SelfHealing
       )
     end
 
-    def chat(messages:, tools: nil, tool_choice: nil, temperature: 1, max_tokens: nil, system: nil)
+    def chat(messages:, tools: nil, tool_choice: nil, temperature: 1, max_tokens: nil, system: nil, mode: nil)
       params = {
         model: @model,
         messages:,

@@ -1,0 +1,27 @@
+# Configuração de ambiente para execução local
+
+url_home: https://www.saucedemo.com
+base_uri: https://api.sua-aplicacao.com.br
+
+headless_mode: false
+
+# Credenciais de acesso ao front-end
+email: standard_user
+password: secret_sauce
+token: 'token_opcional'
+
+# Credenciais de API
+email_api_v1: 'api@exemplo.com'
+password_api_v1: 'senha_api'
+token_api_v1: 'token_api_opcional'
+
+# Credenciais de API exposta (se houver)
+email_api_exposed: 'exposed@exemplo.com'
+password_api_exposed: 'senha_exposed'
+token_api_exposed: 'token_exposed_opcional'
+
+log: false
+
+# Limites de entidades
+qty_max_register: 5
+entity_limit: 5

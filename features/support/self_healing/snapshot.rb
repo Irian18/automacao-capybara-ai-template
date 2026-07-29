@@ -110,7 +110,7 @@ module SelfHealing
     end
 
     def component_kind(tag, el)
-      config = @design_system.field_components[tag]
+      config = @design_system&.field_components&.[](tag)
       return config['kind'] if config && config['kind']
 
       case tag
