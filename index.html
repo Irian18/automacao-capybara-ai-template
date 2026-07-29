@@ -330,6 +330,7 @@
       <div class="logo">Capybara Self-Healing</div>
       <ul class="nav-links">
         <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#execucoes">Execuções</a></li>
         <li><a href="#funcionalidades">Funcionalidades</a></li>
         <li><a href="#historico">Histórico</a></li>
         <li><a href="#arquitetura">Arquitetura</a></li>
@@ -389,16 +390,45 @@
         Por padrão, ambos os recursos estão <strong>desabilitados</strong> — basta usar os perfis
         <code>cucumber -p self_healing</code> e/ou <code>cucumber -p rag</code> quando quiser ativá-los.
       </p>
+    </section>
+
+    <section id="execucoes" class="about">
+      <h2>▶️ Execuções</h2>
       <p>
-        Execução por instrução em linguagem natural via rake task
-        <code>bundle exec rake ai:run["Preencha o formulário de login"]</code>
-
-        Execução de cenários pelo diretório .feature de self healing via rake task
-        <code>bundle exec rake ai:run_features[features/specs/self_healing/login_self_healing.feature]</code>
-
-        ou execução por TAG
-        <code>bundle exec rake ai:run_features[@login_self_healing]</code>
+        O Self Healing pode ser executado de diferentes formas: passando uma instrução diretamente,
+        apontando para um arquivo <code>.feature</code> ou filtrando por tag. Veja os exemplos abaixo.
       </p>
+      <div class="cards">
+        <article class="card">
+          <h3>💬 Por instrução</h3>
+          <p>
+            Execute uma instrução em linguagem natural diretamente pela rake task.
+          </p>
+          <div class="code-block">
+            <code>bundle exec rake ai:run["Preencha o formulário de login"]</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>📄 Por arquivo .feature</h3>
+          <p>
+            Execute cenários contidos em um arquivo específico de self healing.
+          </p>
+          <div class="code-block">
+            <code>bundle exec rake ai:run_features[features/specs/self_healing/login_self_healing.feature]</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>🏷️ Por tag</h3>
+          <p>
+            Filtre cenários de self healing por tag, como <code>@login_self_healing</code>.
+          </p>
+          <div class="code-block">
+            <code>bundle exec rake ai:run_features[@login_self_healing]</code>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section id="funcionalidades">
