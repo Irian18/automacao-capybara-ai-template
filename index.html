@@ -658,42 +658,63 @@
     </section>
 
     <section id="como-usar">
-      <h2>🚀 Como usar</h2>
+      <h2>🚀 Pré-requisitos, Instalação e Configuração</h2>
       <p style="color: var(--text-muted); margin-bottom: 1rem;">
-        Instale as dependências, configure o <code>.env</code> e execute os cenários com o perfil desejado.
-        O projeto usa o <code>cucumber.yml</code> para combinar formatação, ambiente, drivers e relatórios.
+        Prepare o ambiente, instale as dependências e configure as variáveis necessárias
+        antes de executar os testes. Com tudo pronto, vá para a seção <a href="#execucoes">▶️ Execuções</a>.
       </p>
 
-      <div class="code-block">
-        <code># Instalar dependências
+      <div class="cards">
+        <article class="card">
+          <h3>📋 Pré-requisitos</h3>
+          <p>
+            Antes de começar, verifique se o ambiente possui:
+          </p>
+          <ul style="color: var(--text-muted); padding-left: 1.25rem; margin-bottom: 1rem;">
+            <li><strong>Ruby 3.3.x</strong> (recomendado via rbenv ou asdf)</li>
+            <li><strong>Bundler</strong> — <code>gem install bundler</code></li>
+            <li><strong>Google Chrome</strong> (para execução com Cuprite)</li>
+            <li><strong>Node.js</strong> (necessário apenas para o Allure CLI)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>⚙️ Instalação</h3>
+          <p>
+            Clone o repositório e instale as dependências Ruby. O Allure CLI é opcional,
+            mas recomendado para gerar relatórios com evidências.
+          </p>
+          <div class="code-block">
+            <code>git clone https://github.com/Irian18/capybara-self-healing-locators.git
+cd capybara-self-healing-locators
 bundle install
 
-# Copiar e configurar variáveis de ambiente
+# Allure CLI (opcional)
+npm install -g allure-commandline</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>🔑 Configuração</h3>
+          <p>
+            Copie o arquivo de exemplo, ajuste o ambiente e, se for usar IA,
+            configure a chave de API no <code>.env</code>.
+          </p>
+          <div class="code-block">
+            <code># Copiar variáveis de ambiente
 cp .env.example .env
 
-# Edite o .env se for usar IA
+# Edite o .env
 AI_API_KEY=sua-chave-aqui
+BASE_URL=https://api.moonshot.ai/v1
 
-# Execução padrão (Self Healing e RAG desabilitados)
-bundle exec cucumber
-
-# Executar por tag
-bundle exec cucumber -t @login
-
-# Executar feature específica
-bundle exec cucumber features/specs/exemplo.feature
-
-# Self Healing + RAG habilitados
-bundle exec cucumber -p self_healing -p rag -t "@login"
-
-# Forçar re-descoberta de planos (ignora cache)
-AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
-
-# Gerar relatório Allure
-allure serve report/allure-results</code>
+# Escolher ambiente (default: example)
+bundle exec cucumber -p local</code>
+          </div>
+        </article>
       </div>
 
-      <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 1rem;">
+      <p style="color: var(--text-muted); margin-top: 2rem; margin-bottom: 1rem;">
         Perfis principais disponíveis no <code>cucumber.yml</code>:
       </p>
       <div class="cards">
