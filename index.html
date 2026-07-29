@@ -389,6 +389,16 @@
         Por padrão, ambos os recursos estão <strong>desabilitados</strong> — basta usar os perfis
         <code>cucumber -p self_healing</code> e/ou <code>cucumber -p rag</code> quando quiser ativá-los.
       </p>
+      <p>
+        Execução por instrução em linguagem natural via rake task
+        <code>bundle exec rake ai:run["Preencha o formulário de login"]</code>
+
+        Execução de cenários pelo diretório .feature de self healing via rake task
+        <code>bundle exec rake ai:run_features[features/specs/self_healing/login_self_healing.feature]</code>
+
+        ou execução por TAG
+        <code>bundle exec rake ai:run_features[@login_self_healing]</code>
+      </p>
     </section>
 
     <section id="funcionalidades">
@@ -643,17 +653,8 @@ bundle exec cucumber -t @login
 # Executar feature específica
 bundle exec cucumber features/specs/exemplo.feature
 
-# Apenas Self Healing habilitado
-bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
-
 # Self Healing + RAG habilitados
-bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
-
-# Executar instrução em linguagem natural via rake task
-bundle exec rake ai:run["Preencha o formulário de login"]
-
-# Executar cenários .feature de self healing via rake task
-bundle exec rake ai:run_features
+bundle exec cucumber -p self_healing -p rag -t "@login"
 
 # Forçar re-descoberta de planos (ignora cache)
 AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
