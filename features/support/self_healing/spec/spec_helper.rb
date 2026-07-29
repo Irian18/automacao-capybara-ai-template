@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
 require 'minitest/spec'
+
+# Só ativa o runner automático do Minitest quando este arquivo é carregado
+# por um spec (*_spec.rb). Isso evita que o runner seja disparado durante a
+# execução do Cucumber, quando a pasta de specs acaba sendo carregada como step definitions.
+if caller.any? { |line| line.include?('_spec.rb') }
+  require 'minitest/autorun'
+end
+
 require 'fileutils'
 require 'tmpdir'
 

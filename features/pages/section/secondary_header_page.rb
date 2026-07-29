@@ -3,6 +3,6 @@ class SecondaryHeaderSection < SitePrism::Section
   element :span_title, '[data-test="title"]'
 
   def sort_by(option_text)
-    product_sort_container.select(option_text)
+    btn_product_sort_container.select(option_text).text
   end
 end

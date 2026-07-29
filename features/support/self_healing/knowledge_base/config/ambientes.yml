@@ -16,8 +16,8 @@ staging:
   headless: true
 
 prod:
-  url_home: "https://app.exemplo.com"
+  url_home: "ttps://www.saucedemo.com"
   api_base: "https://app.exemplo.com/api/v1"
-  usuario_padrao: "usuario@exemplo.com"
-  senha_padrao: "senha123"
-  headless: true
+  usuario_padrao: standard_user
+  senha_padrao: "secret_sauce"
+  headless: false

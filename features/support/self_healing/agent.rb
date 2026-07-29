@@ -10,6 +10,7 @@ require_relative 'prompt_loader'
 require_relative 'plan_executor'
 require_relative 'snapshot'
 require_relative 'rag'
+require_relative 'locator_history'
 
 module SelfHealing
   # Orquestrador do SelfHealing.
@@ -109,6 +110,7 @@ module SelfHealing
         heal_reason:
       )
       @context.cache.save(new_plan)
+      record_locator_changes!(plan, new_plan)
 
       @context.logger.info("[SelfHealing] Cache atualizado (versão #{plan.version + 1})#{heal_reason ? " — motivo: #{heal_reason}" : ''}")
 
@@ -215,6 +217,67 @@ module SelfHealing
       return '(nenhum)' if steps.nil? || steps.empty?
 
       steps.each_with_index.map { |s, i| "  #{i + 1}. #{s['name']}(#{s['input'].to_json})" }.join("\n")
+    end
+
+    def record_locator_changes!(old_plan, new_plan)
+      page_object_name = @context.page_object.class.name if @context.page_object
+
+      old_steps = old_plan.steps || []
+      new_steps = new_plan.steps || []
+
+      [old_steps.size, new_steps.size].min.times do |i|
+        old_step = old_steps[i]
+        new_step = new_steps[i]
+
+        next unless old_step['name'] == new_step['name']
+
+        old_input = old_step['input'] || {}
+        new_input = new_step['input'] || {}
+
+        old_locator = extract_locator(old_step['name'], old_input)
+        new_locator = extract_locator(new_step['name'], new_input)
+
+        next if old_locator.nil? || new_locator.nil? || old_locator == new_locator
+
+        element_name = element_name_from_step(new_step['name'], new_input) || 'unknown'
+
+        @context.locator_history.record(
+          page_object: page_object_name || 'unknown',
+          element_name: element_name,
+          version: old_plan.version,
+          locator: old_locator,
+          reason: new_plan.heal_reason,
+          change_type: 'heal'
+        )
+
+        @context.locator_history.record(
+          page_object: page_object_name || 'unknown',
+          element_name: element_name,
+          version: new_plan.version,
+          locator: new_locator,
+          reason: new_plan.heal_reason,
+          change_type: 'heal'
+        )
+      end
+    rescue StandardError => e
+      @context.logger.warn("[SelfHealing] Falha ao registrar histórico de locators: #{e.class}: #{e.message}")
+    end
+
+    def extract_locator(tool_name, input)
+      case tool_name
+      when 'click'    then input['css']
+      when 'fill_in'  then input['field']
+      when 'assert_element' then input['css']
+      when 'page_object_call' then input['element']
+      else input['css'] || input['field'] || input['element'] || input['selector']
+      end
+    end
+
+    def element_name_from_step(tool_name, input)
+      case tool_name
+      when 'page_object_call' then input['element']
+      else input['element'] || extract_locator(tool_name, input)
+      end
     end
 
     def system_prompt

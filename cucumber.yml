@@ -1,5 +1,5 @@
 ---
-default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p local -p cuprite -p norag -p no_self_healing
+default: --publish-quiet --color -t "not @wip" -p pretty -p prod -p allure -p routes_name -p local -p cuprite -p norag -p no_self_healing
 
 # Formatação
 pretty: --format pretty
@@ -9,7 +9,7 @@ for_ci: --format progress
 cuprite: BROWSER=cuprite
 
 # Ambientes de teste
-example: ENVIRONMENT_TYPE=example
+prod: ENVIRONMENT_TYPE=prod
 local: ENVIRONMENT_TYPE=local
 staging: ENVIRONMENT_TYPE=staging
 sandbox: ENVIRONMENT_TYPE=sandbox
@@ -22,7 +22,7 @@ norag: RAG_ENABLED=false
 
 # Self Healing
 self_healing: SELF_HEALING_ENABLED=true
-no_self_healing: SELF_HEALING_ENABLED=false
+no_self_healing: SELF_HEALING_ENABLED=false --exclude "features/support/self_healing/spec"
 
 # Relatórios
 html: --format html --out=report/html_report/report.html

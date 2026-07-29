@@ -9,11 +9,11 @@ module SelfHealing
         {
           name: 'fill_in',
           description: 'Preenche um campo de texto, textarea ou qualquer input. ' \
-                        'Aceita id, name, formcontrolname, label, placeholder ou seletor CSS.',
+                        'Aceita id, data-test, data-teste-id,name, formcontrolname, label, placeholder ou seletor CSS.',
           parameters: {
             type: 'object',
             properties: {
-              field: { type: 'string', description: 'id, name, formcontrolname, label, placeholder ou seletor CSS' },
+              field: { type: 'string', description: 'id, data-test, data-teste-id, name, formcontrolname, label, placeholder ou seletor CSS' },
               value: { type: 'string' }
             },
             required: %w[field value]

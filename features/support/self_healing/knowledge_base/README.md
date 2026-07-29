@@ -18,6 +18,44 @@ Coloque aqui documentos que ajudem o agente a tomar decisões melhores.
 3. Antes de cada instrução, o agente recupera os documentos mais relevantes.
 4. O conteúdo recuperado é injetado no prompt da LLM.
 
+## Processo de execução do RAG
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. INICIALIZAÇÃO                                                        │
+│    - env.rb carrega `rag.rb` quando `RAG_ENABLED=true`                  │
+│    - `RAG_KNOWLEDGE_BASE_DIR` aponta para `features/pages`              │
+│      (Page Objects reais) e `features/support/self_healing/knowledge_base`│
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 2. INDEXAÇÃO                                                            │
+│    - `KnowledgeBase` escaneia recursivamente os diretórios configurados │
+│    - Arquivos `.md`, `.txt`, `.yml`, `.yaml` e `.feature` são lidos     │
+│    - Cada arquivo vira um `Document` (id, texto, metadados)             │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 3. EMBEDDING                                                            │
+│    - Cada documento é transformado em vetor                             │
+│    - Embedder local por palavras-chave (padrão) ou modelo de API        │
+│    - Vetores são normalizados e salvos em `rag_store/`                  │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 4. RECUPERAÇÃO (a cada instrução do agente)                             │
+│    - A instrução em linguagem natural também é convertida em vetor      │
+│    - `Retriever` busca os `RAG_TOP_K` documentos mais similares         │
+│    - Apenas documentos acima de `RAG_MIN_SIMILARITY` são considerados   │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 5. INJEÇÃO DE CONTEXTO                                                  │
+│    - Documentos recuperados são formatados e inseridos no prompt        │
+│    - A LLM usa esse contexto para gerar/corrigir planos e seletores    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 No `cucumber.yml` o perfil `rag` está configurado para usar os Page Objects reais do projeto:
 
 ```yaml

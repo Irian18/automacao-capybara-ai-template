@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'locator_history'
+
 module SelfHealing
   # Contexto de execução compartilhado entre os componentes do agente.
   AgentContext = Struct.new(:session, :page_object, :helper, :logger, keyword_init: true) do
@@ -9,6 +11,10 @@ module SelfHealing
 
     def cache
       @cache ||= PlanCache.new
+    end
+
+    def locator_history
+      @locator_history ||= LocatorHistory.new
     end
   end
 end

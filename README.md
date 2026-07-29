@@ -102,6 +102,15 @@ bundle exec cucumber -p self_healing features/specs/self_healing/login_self_heal
 
 # Com Self Healing + RAG habilitados
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
+
+# Executar instrução em linguagem natural via rake task
+bundle exec rake self_healing:run["Preencha o formulário de login"]
+
+# Executar cenários .feature de self healing via rake task
+bundle exec rake self_healing:run_features
+
+# Forçar re-descoberta de planos (ignora cache)
+AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
 ```
 
 ---
@@ -213,6 +222,49 @@ A camada `features/support/self_healing/` fornece:
    - Os Page Objects reais em [`features/pages/`](features/pages/) são usados como base de conhecimento para o RAG. Dessa forma, a IA mantém o mesmo padrão, nomenclatura e estilo do projeto ao gerar novos POs ou corrigir planos.
    - Documentos extras podem ser mantidos em [`knowledge_base/`](features/support/self_healing/knowledge_base/) (`.md`, `.txt`, `.yml`, `.feature`) para regras de negócio, fluxos e validações. Veja [`knowledge_base/README.md`](features/support/self_healing/knowledge_base/README.md) para detalhes.
 
+### Processo de execução do Self Healing
+
+Quando o perfil `self_healing` está ativo, cada chamada a `agent.execute(...)` segue o ciclo **RECORD → REPLAY → HEAL**:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. CARGA                                                                │
+│    - `env.rb` carrega `features/support/self_healing/agent.rb`          │
+│    - O cenário instancia `SelfHealing::Agent` com o contexto atual      │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 2. CONSULTA AO CACHE                                                    │
+│    - O agente verifica se já existe um plano para a instrução           │
+│    - Se não existir (ou `AI_FORCE_RECORD=true`), vai para RECORD        │
+│    - Se existir, tenta REPLAY                                           │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 3. RECORD                                                               │
+│    - Snapshot do HTML é capturado                                       │
+│    - Se RAG estiver ativo, recupera contexto dos Page Objects reais     │
+│    - Prompt (instrução + snapshot + contexto) é enviado à LLM           │
+│    - A LLM retorna uma sequência de ferramentas                         │
+│    - Cada ferramenta é executada (click, fill_in, assert, etc.)         │
+│    - Plano bem-sucedido é salvo em cache (`PlanCache`)                  │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 4. REPLAY                                                               │
+│    - Plano cacheado é executado sem chamada à LLM                       │
+│    - Ferramentas rodam na ordem gravada                                 │
+│    - Rápido e sem custo de API                                          │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 5. HEAL                                                                 │
+│    - Se REPLAY falha, identifica a ferramenta quebrada                  │
+│    - Novo snapshot é tirado                                             │
+│    - Apenas o passo quebrado é enviado à LLM para correção              │
+│    - Plano cacheado é atualizado                                        │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Prompts do agente
 
@@ -252,6 +304,40 @@ agent.execute("Faça login com usuário 'admin' e senha 'secret'")
 | `rag` | `RAG_ENABLED=true` + `RAG_KNOWLEDGE_BASE_DIR=features/pages` | Indexa os Page Objects reais do projeto e os injeta no prompt da IA como contexto extra. |
 
 **O `rag` é um contexto adicional para o `self_healing`.** Você pode usar `self_healing` sozinho, mas se também usar `rag`, o agente consulta a base de conhecimento antes de gerar ou corrigir planos.
+
+### Processo de execução do RAG
+
+O RAG é executado em duas fases: **indexação** (uma vez por execução) e **recuperação** (a cada instrução do agente).
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. INICIALIZAÇÃO                                                        │
+│    - `RAG_ENABLED=true` carrega `features/support/self_healing/rag.rb`  │
+│    - `RAG_KNOWLEDGE_BASE_DIR` aponta para `features/pages`              │
+│      e `features/support/self_healing/knowledge_base`                   │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 2. INDEXAÇÃO                                                            │
+│    - `KnowledgeBase` escaneia os diretórios configurados                │
+│    - Arquivos `.md`, `.txt`, `.yml`, `.yaml` e `.feature` são lidos     │
+│    - Cada arquivo vira um `Document`                                    │
+│    - `Embedder` gera vetores e `Store` persiste em `rag_store/`         │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 3. RECUPERAÇÃO                                                          │
+│    - A instrução do agente é convertida em vetor                        │
+│    - `Retriever` busca os `RAG_TOP_K` documentos mais similares         │
+│    - Documentos abaixo de `RAG_MIN_SIMILARITY` são descartados          │
+└─────────────────────────────────┬───────────────────────────────────────┘
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 4. INJEÇÃO DE CONTEXTO                                                  │
+│    - Documentos recuperados são formatados e adicionados ao prompt      │
+│    - A LLM usa esse contexto para gerar/corrigir planos e seletores    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 #### Comportamento por combinação
 

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfólio profissional de automação de testes, QA e IA.">
-  <title>Portfólio | Automação de Testes & QA</title>
+  <meta name="description" content="Template de automação de testes E2E com Ruby, Capybara, Cucumber e Self Healing Locators com IA.">
+  <title>Capybara Self-Healing Locators | Automação E2E com IA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -18,6 +18,7 @@
       --accent: #38bdf8;
       --accent-dark: #0284c7;
       --success: #22c55e;
+      --warning: #f59e0b;
       --radius: 12px;
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
       --max-width: 1000px;
@@ -118,7 +119,7 @@
     .hero p {
       font-size: 1.125rem;
       color: var(--text-muted);
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto 1.75rem;
     }
 
@@ -222,6 +223,16 @@
       font-weight: 600;
     }
 
+    .tag.success {
+      background: rgba(34, 197, 94, 0.12);
+      color: var(--success);
+    }
+
+    .tag.warning {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warning);
+    }
+
     .skills-list {
       display: flex;
       flex-wrap: wrap;
@@ -242,7 +253,44 @@
       background: var(--surface-hover);
     }
 
-    .contact-links {
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--surface-hover);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    .code-block code {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: pre-wrap; /* Alterado de 'pre' para 'pre-wrap' */
+      display: block;
+      word-break: break-all;
+    }
+
+    .code-block .comment {
+      color: var(--text-muted);
+    }
+
+    .diagram {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      overflow-x: auto;
+      border: 1px solid var(--surface-hover);
+    }
+
+    .diagram .highlight {
+      color: var(--accent);
+    }
+
+    .links {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
@@ -271,178 +319,604 @@
 <body>
   <header>
     <nav>
-      <div class="logo">Seu Nome</div>
+      <div class="logo">Capybara Self-Healing</div>
       <ul class="nav-links">
         <li><a href="#sobre">Sobre</a></li>
-        <li><a href="#projetos">Projetos</a></li>
-        <li><a href="#habilidades">Habilidades</a></li>
-        <li><a href="#contato">Contato</a></li>
+        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#historico">Histórico</a></li>
+        <li><a href="#arquitetura">Arquitetura</a></li>
+        <li><a href="#processo">Processo</a></li>
+        <li><a href="#como-usar">Como Usar</a></li>
+        <li><a href="#tecnologias">Tecnologias</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <section class="hero">
-      <h1>Olá, eu sou Irian Rockenbach<span>QA & Analista e Automação de Testes</span></h1>
-      <p>Construo testes automatizados confiáveis com Capybara e Ruby elevando a qualidade de software.</p>
+      <h1>Automação E2E com <span>Capybara, Ruby e IA</span></h1>
+      <p>
+        Template genérico de testes end-to-end com <strong>Self Healing Locators</strong> e
+        <strong>RAG</strong>. Reduza a manutenção da suíte quando a UI muda e mantenha o histórico
+        de alterações para análise.
+      </p>
       <div class="btn-group">
-        <a href="https://github.com/Irian18/automacao-capybara-ai-template" class="btn btn-primary">Ver projeto</a>
-        <a href="https://github.com/irian18" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
+        <a href="https://github.com/Irian18/automacao-capybara-ai-template" class="btn btn-primary">Ver no GitHub</a>
+        <a href="README.md" class="btn btn-outline">Ler README</a>
       </div>
     </section>
 
     <section id="sobre" class="about">
-      <h2>👤 Sobre mim</h2>
+      <h2>📖 Sobre o projeto</h2>
       <p>
-        Analista de Testes com 9 anos de experiência em garantia da qualidade de software, sendo 5 anos
-        dedicados à automação de testes. Atuo desde a execução de testes manuais funcionais, regressão,
-        sanidade e exploratórios até a criação e liderança de projetos de automação end-to-end e de
-        performance. Tenho sólida vivência com Ruby, Capybara, Cucumber (BDD), Page Objects
-        (SitePrism/DSL), Selenium, Grafana K6, Postman e Jira Atlassian (Kanban).
-        </p>
+        Este é um template de automação de testes end-to-end (E2E) construído com <strong>Ruby</strong>,
+        <strong>Cucumber</strong>, <strong>Capybara</strong>, <strong>SitePrism</strong> e <strong>Cuprite</strong>.
+        Ele foi pensado para ser adaptado a qualquer aplicação web, oferecendo uma base sólida de BDD,
+        Page Objects e relatórios.
+      </p>
       <p>
-        Sou movido pela curiosidade técnica e pelo compromisso de entregar software com qualidade real e mensurável.
+        O diferencial está nas camadas opcionais de inteligência artificial:
+        <strong>Self Healing Locators</strong>, que corrige seletores automaticamente quando a interface muda,
+        e <strong>RAG</strong>, que busca contexto nos Page Objects para enriquecer o prompt enviado ao modelo de IA.
+      </p>
+      <p>
+        O que o Self Healing faz?
+        O Self Healing não substitui os step definitions. Ele atua dentro dos steps quando um locator quebra.
+      </p>
+      <p>
+        O que o RAG faz?
+        O RAG fornece contexto adicional (como descrição de elementos das page objects) para o agente de Self Healing tomar decisões melhores. 
+        Ele também não substitui os step definitions.
+      </p>
+      <p>
+        O objetivo é reduzir a manutenção da suíte de testes, evitando falhas por mudanças de ID, classe ou estrutura
+        do DOM, e ao mesmo tempo manter a confiabilidade dos testes com histórico de alterações.
+      </p>
+      <p>
+        Toda alteração de locator realizada pelo Self Healing é registrada em um histórico versionado
+        (<code>features/support/self_healing/locator_history.json</code>). Isso permite que o time de QA revise
+        manualmente cada mudança e verifique se o novo seletor realmente representa o mesmo elemento —
+        evitando falsos negativos e mantendo a confiabilidade da suíte.
+      </p>
+      <p>
+        Por padrão, ambos os recursos estão <strong>desabilitados</strong> — basta usar os perfis
+        <code>cucumber -p self_healing</code> e/ou <code>cucumber -p rag</code> quando quiser ativá-los.
       </p>
     </section>
 
-    <section id="trajetoria" class="about">
-      <h2>💼 Trajetória Profissional</h2>
-      <p>
-        Com nove anos de experiência em garantia da qualidade de software (sendo cinco deles dedicados à automação de testes),
-        acredito que minha trajetória pode agregar valor à equipe de vocês.
-      </p>
-      <p>
-        Na CustomerX, onde atuo há quase cinco anos, lidero o projeto de automação end-to-end em Ruby com Capybara,
-        Cucumber e Selenium, além de ter implementado do zero a suite de testes de performance com Grafana K6. Não foi só
-        questão de montar scripts — precisei entender onde o sistema quebrava com mais frequência, priorizar cenários críticos
-        e fazer com que a automação realmente reduzisse o tempo de feedback da equipe. Recentemente, inclusive, adicionei a
-        funcionalidade de self-healing locators com IA.
-      </p>
-      <p>
-        Paralelo à automação, sigo executando testes manuais de caixa-preta (funcional, regressão, sanidade, exploratório e de
-        aceitação) e testes de API validando métodos HTTP, status, body e headers no Postman. Acompanho tudo isso no Jira
-        Atlassian, em um fluxo Kanban que a gente adaptou ao longo do tempo, crio e mantenho os cenários de teste, reporto
-        defeitos, acompanho o ciclo de vida deles e ajudo a priorizar o que realmente precisa ser corrigido antes da entrega,
-        participo das dailies e, quando preciso, questiono requisitos ainda no refinamento para evitar retrabalho depois.
-      </p>
-      <p>
-        Antes disso, na Junsoft Sistemas, passei quase três anos testando um sistema ERP na prática: caixa-preta, regressão,
-        integração com banco Firebird. Foi lá que aprendi que testar bem não é só achar bug — é garantir que o usuário final
-        não tenha dor de cabeça com rotinas fiscais e contábeis. Essa vivência me deu uma noção prática de negócio.
-      </p>
-      <p>
-        Hoje, estou cursando Engenharia de Software na UNIPAR (previsão de conclusão em 2028), o que tem me ajudado a
-        enxergar a qualidade com uma lente mais técnica e estratégica.
-      </p>
-      <p>
-        Domino ferramentas como Postman, Jira, Allure Report e tenho familiaridade com Playwright e Cypress, mas meu ponto
-        forte mesmo é conseguir olhar para um processo de entrega e identificar onde a qualidade está falhando — seja com
-        teste manual ou com automação.
-      </p>
-      <p>
-        Gosto de trabalhar em times ágeis, de questionar requisitos antes de codar e de documentar o que aprendi para quem
-        vier depois. Valorizo times que entregam com qualidade real e se preocupam com quem usa o produto — e me sinto
-        motivado em contribuir com esse tipo de cultura.
-      </p>
-    </section>
-
-    <section id="projetos">
-      <h2>🚀 Projetos em destaque</h2>
+    <section id="funcionalidades">
+      <h2>⚡ Funcionalidades</h2>
       <div class="cards">
         <article class="card">
-          <h3>Capybara + IA</h3>
+          <h3>🧠 Self Healing Locators</h3>
           <p>
-            Framework de automação com Capybara e Ruby integrado a modelos de IA. Usa <strong>RAG</strong>
-            para buscar contexto do histórico de testes e interface, e aplica <strong>Self Healing</strong>
-            para corrigir seletores automaticamente quando a UI muda, reduzindo a manutenção da suíte mas mantendo histórico de alterações para análises.
+            Quando um elemento não é encontrado, a IA propõe um novo seletor com base na DOM atual.
+            Cada mudança é versionada e salva em <code>locator_history.json</code>, permitindo revisão
+            manual antes de tornar a correção definitiva.
           </p>
           <div class="tags">
-            <span class="tag">Capybara</span>
-            <span class="tag">Ruby</span>
-            <span class="tag">RAG</span>
-            <span class="tag">Self Healing Locators</span>
             <span class="tag">IA</span>
-            <span class="tag">Allure</span>
+            <span class="tag">Autocorreção</span>
+            <span class="tag">Auditoria</span>
+            <span class="tag warning">Opcional</span>
           </div>
+          <p>
+            <div class="btn-group">
+              <a href="https://github.com/Irian18/capybara-self-healing-locators/blob/main/features/support/self_healing/README.md" class="btn btn-primary" class="btn btn-outline">Ler README</a>
+            </div>
+          </p>
         </article>
 
         <article class="card">
-          <h3>BDD com Cucumber</h3>
+          <h3>🔍 RAG — Retrieval Augmented Generation</h3>
           <p>
-            Suíte de testes legíveis para stakeholders, usando Gherkin, Cucumber e Capybara com fixtures customizadas e relatórios integrados.
+            Indexa os arquivos de <code>features/pages</code> e os utiliza como contexto extra no prompt,
+            ajudando o modelo a sugerir seletores mais precisos e alinhados ao padrão do projeto.
+            Com RAG, a IA "conhece" a estrutura dos Page Objects e respeita as convenções do time.
           </p>
           <div class="tags">
-            <span class="tag">Cucumber</span>
+            <span class="tag">Contexto</span>
+            <span class="tag">Page Objects</span>
+            <span class="tag warning">Opcional</span>
+          </div>
+          <p>
+            <div class="btn-group">
+              <a href="https://github.com/Irian18/capybara-self-healing-locators/blob/main/features/support/self_healing/knowledge_base/README.md" class="btn btn-outline">Ler README</a>
+            </div>
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>🥒 BDD com Cucumber</h3>
+          <p>
+            Cenários escritos em Gherkin, legíveis para times técnicos e de negócio,
+            com suporte a tags, hooks e fixtures customizadas.
+          </p>
+          <div class="tags">
             <span class="tag">Gherkin</span>
-            <span class="tag">BDD</span>
-            <span class="tag">Capybara</span>
+            <span class="tag">Cucumber</span>
+            <span class="tag success">Padrão</span>
           </div>
         </article>
 
         <article class="card">
-          <h3>Relatórios Allure</h3>
+          <h3>📄 Page Objects com SitePrism</h3>
           <p>
-            Sistema automático de anexos para o Allure Report: screenshots, vídeos, traces, logs e snapshots de falha
-            anexados a cada teste.
+            Organização da suíte com Page Object Model e DSL do SitePrism,
+            tornando os testes mais reusáveis e fáceis de manter.
+          </p>
+          <div class="tags">
+            <span class="tag">SitePrism</span>
+            <span class="tag">POM</span>
+            <span class="tag success">Padrão</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>📊 Relatórios Allure</h3>
+          <p>
+            Geração automática de evidências: screenshots, vídeos, traces e logs de falha anexados
+            a cada cenário no Allure Report.
           </p>
           <div class="tags">
             <span class="tag">Allure</span>
-            <span class="tag">Reporting</span>
+            <span class="tag">Evidências</span>
+            <span class="tag success">Padrão</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>🌐 Drivers flexíveis</h3>
+          <p>
+            Suporte a Cuprite (Chrome headless via CDP) e Selenium WebDriver,
+            configuráveis por perfis no <code>cucumber.yml</code>.
+          </p>
+          <div class="tags">
+            <span class="tag">Cuprite</span>
+            <span class="tag">Selenium</span>
+            <span class="tag success">Padrão</span>
           </div>
         </article>
       </div>
     </section>
 
-    <section id="habilidades">
-      <h2>🛠️ Habilidades</h2>
-      <div class="skills-list">
-        <span class="skill">Teste Manual</span>
-        <span class="skill">Teste funcional</span>
-        <span class="skill">Teste de Regreção</span>
-        <span class="skill">Teste de Aceitação</span>
-        <span class="skill">Teste exploratório</span>
-        <span class="skill">Criação e manutenção de cenários de teste</span>
-        <span class="skill">Criação e manutenção de casos de teste</span>
-        <span class="skill">Teste de API</span>
-        <span class="skill">Teste de Performance</span>
-        <span class="skill">Automação de teste ambiente Web</span>
-        <span class="skill">Ruby</span>
-        <span class="skill">Framework Capybara</span>
-        <span class="skill">Framework Cucumber (BDD)</span>
-        <span class="skill">Padrão de projeto em automação de testes - PageObjects SitePrism (DSL)</span>
-        <span class="skill">Selenium WebDriver</span>
-        <span class="skill">Typescript</span>
-        <span class="skill">Python</span>
-        <span class="skill">Playwright</span>
-        <span class="skill">Cypress</span>
-        <span class="skill">Grafana K6/Report</span>
-        <span class="skill">Análise de métricas de performance pelo Chrome DevTools Protocol</span>
-        <span class="skill">Relatório dinâmico - Allure Report</span>
-        <span class="skill">Git & GitHub</span>
-        <span class="skill">Postman</span>
-        <span class="skill">Jira Atlassian (Kanban/Scrum)</span>
-        <span class="skill">Desenvolvimento ágil</span>
-        
+    <section id="historico" class="about">
+      <h2>📜 Histórico de alterações de locators</h2>
+      <p>
+        Cada vez que o Self Healing propõe um novo locator, a alteração é salva em
+        <code>features/support/self_healing/locator_history.json</code>. Esse histórico funciona como um
+        <strong>log de auditoria versionado</strong>: você pode verificar quando a mudança aconteceu,
+        qual elemento foi afetado, qual era o seletor anterior e qual é o novo.
+      </p>
+      <p>
+        Isso é importante porque a IA, embora rápida, pode sugerir um seletor tecnicamente válido
+        semanticamente diferente do original. Com o histórico, o QA pode revisar manualmente e decidir
+        se aceita a correção ou se precisa ajustar o Page Object de forma mais segura.
+      </p>
+      <p>
+        O arquivo registra o <strong>page object</strong>, o <strong>nome do elemento</strong>, o
+        <strong>motivo da alteração</strong>, o <strong>tipo de mudança</strong> (heal/manual) e a
+        <strong>lista de versões</strong> do locator — como no exemplo abaixo:
+      </p>
+      <div class="code-block">
+        <code>{
+  "schema_version": "1.1.0",
+  "metadata": {
+    "description": "Histórico de alterações de locators",
+    "created_at": "2026-07-27T09:00:00-03:00",
+    "updated_at": "2026-07-27T14:32:10-03:00",
+    "total_entries": 3
+  },
+  "entries": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-07-27T14:32:10-03:00",
+      "page_object": "LoginPage",
+      "element_name": "in_user_id",
+      "change_type": "heal",
+      "reason": "ID do campo de login mudou de #email para #user-name",
+      "locators": [
+        { "version": 1, "locator": "#email" },
+        { "version": 2, "locator": "#user-name" }
+      ]
+    }
+  ]
+}</code>
       </div>
     </section>
 
-    <section id="contato">
-      <h2>📬 Contato</h2>
-      <p style="color: var(--text-muted); margin-bottom: 1rem;">
-        <strong>Vamos conversar?</strong><br>
-        Estou aberto a oportunidades, trocas de ideia e parcerias. Me encontre nos canais abaixo.
+    <section id="arquitetura" class="about">
+      <h2>🏗️ Arquitetura do fluxo</h2>
+      <p>
+        A execução segue um fluxo claro: primeiro o teste tenta encontrar o elemento normalmente;
+        somente quando isso falha, a IA é acionada para propor uma correção. Sem os perfis opcionais,
+        o projeto funciona como uma suíte E2E tradicional.
       </p>
-      <div class="contact-links">
-        <a href="https://github.com/irian18" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
+
+      <pre class="diagram"><code>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  1. Cenário Cucumber (.feature)                                             │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  2. Step Definitions + Page Object (SitePrism)                              │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  3. Capybara + Driver (Cuprite / Selenium)                                  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+        ┌─────────────────────┐   ┌─────────────────────────────┐
+        │ Elemento encontrado │   │ Elemento NÃO encontrado     │
+        └──────────┬──────────┘   └─────────────┬───────────────┘
+                   │                              │
+                   ▼                              ▼
+        ┌─────────────────────┐   ┌─────────────────────────────┐
+        │ Teste continua      │   │ Self Healing acionado       │
+        └─────────────────────┘   └─────────────┬───────────────┘
+                                                │
+                              ┌─────────────────┴─────────────────┐
+                              │                                   │
+                              ▼                                   ▼
+                   ┌────────────────────┐            ┌────────────────────┐
+                   │ RAG opcional       │            │ IA analisa a DOM   │
+                   │ contexto de        │            │                    │
+                   │ features/pages     │───────────▶│ sugere novo locator│
+                   └────────────────────┘            └─────────┬──────────┘
+                                                               │
+                                                               ▼
+                                                  ┌────────────────────────┐
+                                                  │ Histórico salvo em     │
+                                                  │ locator_history.json   │
+                                                  └────────────┬───────────┘
+                                                               │
+                                                               ▼
+                                                  ┌────────────────────────┐
+                                                  │ Teste continua com o   │
+                                                  │ novo seletor           │
+                                                  └────────────────────────┘</code></pre>
+
+      <p style="color: var(--text-muted); margin-top: 1.5rem;">
+        <strong>Destaques do fluxo:</strong>
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>1️⃣ Execução normal primeiro</h3>
+          <p>
+            O teste executa da forma tradicional. A IA só é chamada quando realmente necessário,
+            evitando chamadas desnecessárias à API e mantendo a execução rápida.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>2️⃣ Falha como gatilho</h3>
+          <p>
+            Quando o Capybara não encontra o elemento, o Self Healing entra em ação,
+            analisando a DOM atual para encontrar o melhor candidato de substituição.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>3️⃣ Contexto com RAG</h3>
+          <p>
+            Se o perfil <code>rag</code> estiver ativo, o sistema busca trechos relevantes dos
+            Page Objects existentes e os inclui no prompt, melhorando a qualidade da sugestão.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>4️⃣ Auditoria automática</h3>
+          <p>
+            Toda sugestão é registrada no histórico com data, motivo, seletor antigo e novo,
+            permitindo revisão manual antes de aplicar a mudança nos arquivos do projeto.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="como-usar">
+      <h2>🚀 Como usar</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Instale as dependências, configure o <code>.env</code> e execute os cenários com o perfil desejado.
+        O projeto usa o <code>cucumber.yml</code> para combinar formatação, ambiente, drivers e relatórios.
+      </p>
+
+      <div class="code-block">
+        <code># Instalar dependências
+bundle install
+
+# Copiar e configurar variáveis de ambiente
+cp .env.example .env
+
+# Edite o .env se for usar IA
+AI_API_KEY=sua-chave-aqui
+
+# Execução padrão (Self Healing e RAG desabilitados)
+bundle exec cucumber
+
+# Executar por tag
+bundle exec cucumber -t @login
+
+# Executar feature específica
+bundle exec cucumber features/specs/exemplo.feature
+
+# Apenas Self Healing habilitado
+bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
+
+# Self Healing + RAG habilitados
+bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
+
+# Executar instrução em linguagem natural via rake task
+bundle exec rake ai:run["Preencha o formulário de login"]
+
+# Executar cenários .feature de self healing via rake task
+bundle exec rake ai:run_features
+
+# Forçar re-descoberta de planos (ignora cache)
+AI_FORCE_RECORD=true bundle exec cucumber -p self_healing features/specs/self_healing/login_self_healing.feature
+
+# Gerar relatório Allure
+allure serve report/allure-results</code>
+      </div>
+
+      <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 1rem;">
+        Perfis principais disponíveis no <code>cucumber.yml</code>:
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>default</h3>
+          <p>Perfil ativado automaticamente. Executa com Allure, Cuprite e Self Healing/RAG desabilitados.</p>
+        </article>
+        <article class="card">
+          <h3>self_healing</h3>
+          <p>Habilita o agente de autocorreção de locators via IA e salva o histórico em JSON.</p>
+        </article>
+        <article class="card">
+          <h3>rag</h3>
+          <p>Habilita a busca de contexto nos Page Objects para enriquecer o prompt da IA.</p>
+        </article>
+        <article class="card">
+          <h3>local / staging / sandbox</h3>
+          <p>Definem qual arquivo de ambiente em <code>features/support/environments/</code> será carregado.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="perfis" class="about">
+      <h2>🎛️ Perfis de execução</h2>
+      <p>
+        Os perfis do <code>cucumber.yml</code> permitem combinar rapidamente formato de saída,
+        ambiente, driver e recursos de IA. Veja quando usar cada um:
+      </p>
+      <div class="code-block">
+        <code>|     Perfil      |              O que habilita                    |             Quando usar                |
+|-----------------|----------------------------------------------|----------------------------------------|
+| default         | Allure, Cuprite, ambiente example, sem IA    | Execução diária e CI padrão            |
+| self_healing    | SELF_HEALING_ENABLED=true + LocatorHistory   | UI instável ou em refactoring          |
+| rag             | RAG_ENABLED=true + índice de features/pages  | Quer contexto dos Page Objects na IA   |
+| local/staging   | Carrega environment correspondente           | Testar contra ambiente específico      |
+| cuprite         | Driver headless Chrome via CDP               | Execução local rápida                  |
+| allure          | Gera resultados para o Allure Report         | Sempre que precisar de evidências      |</code>
+      </div>
+    </section>
+
+    <section id="processo" class="about">
+      <h2>⚙️ Processo de execução</h2>
+      <p>
+        Quando os perfis <code>self_healing</code> e/ou <code>rag</code> estão ativos, a execução
+        segue fluxos bem definidos: o Self Healing trabalha no ciclo <strong>RECORD → REPLAY → HEAL</strong>,
+        enquanto o RAG realiza <strong>indexação → recuperação → injeção de contexto</strong>.
+      </p>
+
+      <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent);">Self Healing — RECORD / REPLAY / HEAL</h3>
+      <pre class="diagram"><code>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. CARGA                                                                    │
+│    - env.rb carrega agent.rb quando SELF_HEALING_ENABLED=true               │
+│    - O cenário instancia SelfHealing::Agent com o contexto atual            │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. CONSULTA AO CACHE                                                        │
+│    - O agente verifica se já existe um plano para a instrução               │
+│    - Se não existir (ou AI_FORCE_RECORD=true), vai para RECORD              │
+│    - Se existir, tenta REPLAY                                               │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. RECORD                                                                   │
+│    - Snapshot do HTML é capturado                                           │
+│    - Se RAG estiver ativo, recupera contexto dos Page Objects reais         │
+│    - Prompt (instrução + snapshot + contexto) é enviado à LLM               │
+│    - A LLM retorna uma sequência de ferramentas                             │
+│    - Cada ferramenta é executada (click, fill_in, assert, etc.)             │
+│    - Plano bem-sucedido é salvo em cache (PlanCache)                        │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. REPLAY                                                                   │
+│    - Plano cacheado é executado sem chamada à LLM                           │
+│    - Ferramentas rodam na ordem gravada                                     │
+│    - Rápido e sem custo de API                                              │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. HEAL                                                                     │
+│    - Se REPLAY falha, identifica a ferramenta quebrada                      │
+│    - Novo snapshot é tirado                                                 │
+│    - Apenas o passo quebrado é enviado à LLM para correção                  │
+│    - Plano cacheado é atualizado                                            │
+└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
+
+      <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent);">RAG — indexação e recuperação</h3>
+      <pre class="diagram"><code>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. INICIALIZAÇÃO                                                            │
+│    - RAG_ENABLED=true carrega rag.rb                                        │
+│    - RAG_KNOWLEDGE_BASE_DIR aponta para features/pages                      │
+│      e features/support/self_healing/knowledge_base                         │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. INDEXAÇÃO                                                                │
+│    - KnowledgeBase escaneia os diretórios configurados                      │
+│    - Arquivos .md, .txt, .yml, .yaml e .feature são lidos                   │
+│    - Cada arquivo vira um Document                                          │
+│    - Embedder gera vetores e Store persiste em rag_store/                   │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. RECUPERAÇÃO                                                              │
+│    - A instrução do agente é convertida em vetor                            │
+│    - Retriever busca os RAG_TOP_K documentos mais similares                 │
+│    - Documentos abaixo de RAG_MIN_SIMILARITY são descartados                │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. INJEÇÃO DE CONTEXTO                                                      │
+│    - Documentos recuperados são formatados e adicionados ao prompt          │
+│    - A LLM usa esse contexto para gerar/corrigir planos e seletores        │
+└─────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    </section>
+
+    <section id="quando-usar" class="about">
+      <h2>🤔 Quando usar cada combinação</h2>
+      <p>
+        Self Healing e RAG trabalham juntos. O RAG é um contexto adicional para o Self Healing:
+        você pode usar <code>self_healing</code> sozinho, mas se também usar <code>rag</code>,
+        o agente consulta a base de conhecimento antes de gerar ou corrigir planos.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Nenhum recurso de IA</h3>
+          <p>
+            Use no dia a dia quando a aplicação está estável. A suíte executa mais rápido,
+            sem chamadas externas à API de IA, e mantém o comportamento previsível.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Só Self Healing</h3>
+          <p>
+            Ideal durante refatorações de frontend, quando elementos mudam de ID, classe ou posição
+            com frequência. O histórico registra cada correção para revisão posterior.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p self_healing</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Self Healing + RAG</h3>
+          <p>
+            Melhor custo-benefício quando a aplicação muda e você quer sugestões de locators
+            alinhadas ao padrão existente dos Page Objects. O contexto reduz alucinações da IA.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p self_healing -p rag</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Só RAG</h3>
+          <p>
+            Não tem efeito prático sozinho, pois o agente de Self Healing não é carregado.
+            Use sempre em conjunto com <code>-p self_healing</code>.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p self_healing -p rag</code>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="about">
+      <h2>❓ Dúvidas comuns</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>A IA altera meus Page Objects automaticamente?</h3>
+          <p>
+            Não. O Self Healing salva as alterações propostas no histórico em JSON, mas não
+            sobrescreve os arquivos <code>.rb</code> dos Page Objects. Você revisa e aplica manualmente.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>O que acontece se a IA sugerir um locator errado?</h3>
+          <p>
+            O histórico mostra o seletor anterior e o novo, além do motivo da alteração. Isso permite
+            identificar falsos positivos e corrigir o Page Object de forma segura.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Preciso de chave de IA para usar o projeto?</h3>
+          <p>
+            Apenas se for usar Self Healing ou RAG. A execução padrão do template funciona
+            completamente sem API externa.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Posso usar Selenium em vez de Cuprite?</h3>
+          <p>
+            Sim. O projeto já prevê perfis de driver e pode ser configurado para usar Selenium
+            WebDriver, Cuprite ou outro driver suportado pelo Capybara.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="tecnologias">
+      <h2>🛠️ Tecnologias</h2>
+      <div class="skills-list">
+        <span class="skill">Ruby 3.3.x</span>
+        <span class="skill">Cucumber</span>
+        <span class="skill">Capybara</span>
+        <span class="skill">SitePrism</span>
+        <span class="skill">Selenium WebDriver</span>
+        <span class="skill">Cuprite</span>
+        <span class="skill">Ferrum</span>
+        <span class="skill">Allure Report</span>
+        <span class="skill">HTTParty</span>
+        <span class="skill">ruby-openai</span>
+        <span class="skill">Dry::Struct</span>
+        <span class="skill">Faker</span>
+        <span class="skill">dotenv</span>
+      </div>
+    </section>
+
+    <section id="links">
+      <h2>🔗 Links</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Explore o repositório, a documentação completa ou entre em contato.
+      </p>
+      <div class="links">
+        <a href="https://github.com/Irian18/automacao-capybara-ai-template" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
+        <a href="README.md" class="btn btn-outline">README.md</a>
+        <a href="cucumber.yml" class="btn btn-outline">cucumber.yml</a>
         <a href="https://linkedin.com/in/irian8" target="_blank" rel="noopener noreferrer" class="btn btn-outline">LinkedIn</a>
-        <a href="mailto:irian18@gmail.com" class="btn btn-outline">E-mail</a>
-        <a href="https://wa.me/5545999774120" target="_blank" rel="noopener noreferrer" class="btn btn-outline">WhatsApp</a>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>© <span id="year"></span> Irian Rockenbach. Todos os direitos reservados.</p>
+    <p>© <span id="year"></span> Irian Rockenbach. Template de automação E2E com Capybara e IA.</p>
   </footer>
 
   <script>

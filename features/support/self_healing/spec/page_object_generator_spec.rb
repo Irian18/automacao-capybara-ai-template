@@ -17,7 +17,7 @@ describe SelfHealing::PageObjectGenerator do
 
       ```ruby
       class LoginPage < SitePrism::Page
-        set_url '/login'
+        set_url ''
       end
       ```
 

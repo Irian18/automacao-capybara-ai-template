@@ -12,3 +12,6 @@ rag_store/
 
 # Configurações locais do projeto (copiar a partir do .example)
 config/design_system.yml
+
+# Histórico de alterações de locators gerado em runtime
+locator_history.json
