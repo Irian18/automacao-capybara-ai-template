@@ -381,8 +381,7 @@
         do DOM, e ao mesmo tempo manter a confiabilidade dos testes com histórico de alterações.
       </p>
       <p>
-        Toda alteração de locator realizada pelo Self Healing é registrada em um histórico versionado
-        (<code>features/support/self_healing/locator_history.json</code>). Isso permite que o time de QA revise
+        Toda alteração de locator realizada pelo Self Healing é registrada em um histórico versionado. Isso permite que o time de QA revise
         manualmente cada mudança e verifique se o novo seletor realmente representa o mesmo elemento —
         evitando falsos negativos e mantendo a confiabilidade da suíte.
       </p>
@@ -414,10 +413,6 @@
         <article class="card">
           <h3>🔍 RAG — Retrieval Augmented Generation</h3>
           <p>
-            RAG (Retrieval-Augmented Generation, ou Geração Aumentada por Recuperação).
-            Em vez de enviar apenas a pergunta para a IA, o sistema primeiro recupera documentos relacionados a um contexto e os injeta no prompt. 
-            Assim, a IA responde com base em informações reais e atualizadas, reduzindo alucinações e melhorando a precisão.
-            O RAG não corrige locators sozinho. Ele atua como um contexto adicional para o agente de Self Healing.
             Em conjunto com o Self Healing formam uma camada inteligente de autopreservação da suíte de testes: 
             o Self Healing age quando algo quebra, e o RAG garante que a correção seja feita com o máximo de contexto possível.
           </p>
