@@ -978,6 +978,11 @@ bundle exec cucumber -p local</code>
             Não. O Self Healing salva as alterações propostas no histórico em JSON, mas não
             sobrescreve os arquivos <code>.rb</code> dos Page Objects. Você revisa e aplica manualmente.
           </p>
+          <p>
+            <strong>Observação:</strong> quando você executa <code>bundle exec rake "ai:apply_corrections"</code>,
+            o projeto aplica as correções do histórico diretamente nos Page Objects. Mesmo assim,
+            é recomendado revisar as mudanças no Git antes de commitar.
+          </p>
         </article>
 
         <article class="card">
