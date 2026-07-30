@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SelfHealing
   module Config
     class << self
@@ -31,8 +33,14 @@ module SelfHealing
         ENV.fetch('RAG_STORE_PATH', File.expand_path('rag_store', __dir__))
       end
 
+      def rag_knowledge_base_dirs
+        raw = ENV.fetch('RAG_KNOWLEDGE_BASE_DIR', File.expand_path('knowledge_base', __dir__))
+        raw.to_s.split(/[,;]/).map(&:strip).reject(&:empty?)
+      end
+
+      # @deprecated Use rag_knowledge_base_dirs para suporte a múltiplos diretórios.
       def rag_knowledge_base_dir
-        ENV.fetch('RAG_KNOWLEDGE_BASE_DIR', File.expand_path('knowledge_base', __dir__))
+        rag_knowledge_base_dirs.first
       end
 
       def rag_top_k
@@ -53,6 +61,31 @@ module SelfHealing
 
       def rag_embedding_base_url
         ENV.fetch('RAG_EMBEDDING_BASE_URL', base_url)
+      end
+
+      def rag_embedding_dimensions
+        value = ENV.fetch('RAG_EMBEDDING_DIMENSIONS', '')
+        value.to_s.strip.empty? ? nil : value.to_i
+      end
+
+      def rag_embedding_task
+        ENV.fetch('RAG_EMBEDDING_TASK', '')
+      end
+
+      def rag_embedding_task_passage
+        task = rag_embedding_task
+        task.to_s.strip.empty? ? nil : task
+      end
+
+      def rag_embedding_task_query
+        task = ENV.fetch('RAG_EMBEDDING_TASK_QUERY', '')
+        task.to_s.strip.empty? ? nil : task
+      end
+
+      def rag_embedding_config_key
+        parts = [rag_embedding_model, rag_embedding_dimensions]
+        parts << rag_embedding_task if rag_embedding_task.to_s.strip != ''
+        parts.join('|')
       end
     end
   end

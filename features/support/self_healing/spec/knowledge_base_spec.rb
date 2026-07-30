@@ -13,7 +13,7 @@ describe SelfHealing::Rag::KnowledgeBase do
 
     @store = SelfHealing::Rag::Store.new(store_path: @store_dir)
     @kb = SelfHealing::Rag::KnowledgeBase.new(
-      base_dir: @base_dir,
+      base_dirs: [@base_dir],
       store: @store,
       embedder: SelfHealing::Rag::KeywordEmbedder.new
     )
@@ -57,6 +57,41 @@ describe SelfHealing::Rag::KnowledgeBase do
     @kb.index!
 
     assert_nil @store.get('kb:stale.md')
+  end
+
+  it 'não considera fresh quando a configuração de embedding muda' do
+    original = ENV.to_h
+    File.write(File.join(@base_dir, 'login.md'), '# Fluxo de Login')
+    @kb.index!
+
+    assert @kb.fresh?
+
+    ENV['RAG_EMBEDDING_MODEL'] = 'jina-embeddings-v3'
+    ENV['RAG_EMBEDDING_DIMENSIONS'] = '256'
+
+    refute @kb.fresh?
+  ensure
+    ENV.clear
+    ENV.update(original)
+  end
+
+  it 'indexa múltiplos diretórios' do
+    second_dir = File.join(SelfHealing::Test.tmp_dir, "knowledge_base_2_#{@test_id}")
+    FileUtils.mkdir_p(second_dir)
+
+    File.write(File.join(@base_dir, 'pages.md'), '# Páginas')
+    File.write(File.join(second_dir, 'rules.md'), '# Regras')
+
+    kb = SelfHealing::Rag::KnowledgeBase.new(
+      base_dirs: [@base_dir, second_dir],
+      store: @store,
+      embedder: SelfHealing::Rag::KeywordEmbedder.new
+    )
+
+    count = kb.index!
+    assert_equal 2, count
+    assert @store.get('kb:pages.md')
+    assert @store.get('kb:rules.md')
   end
 end
 # rubocop:enable Metrics/BlockLength

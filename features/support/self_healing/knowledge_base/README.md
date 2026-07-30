@@ -13,7 +13,7 @@ Coloque aqui documentos que ajudem o agente a tomar decisões melhores.
 
 ## Como funciona
 
-1. Ao iniciar, o `SelfHealing::Agent` indexa todos os arquivos da pasta configurada em `RAG_KNOWLEDGE_BASE_DIR`.
+1. Ao iniciar, o `SelfHealing::Agent` indexa todos os arquivos dos diretórios configurados em `RAG_KNOWLEDGE_BASE_DIR` (pode ser um ou mais, separados por vírgula ou ponto-e-vírgula).
 2. Cada arquivo vira um documento vetorizado no `rag_store/`.
 3. Antes de cada instrução, o agente recupera os documentos mais relevantes.
 4. O conteúdo recuperado é injetado no prompt da LLM.
@@ -56,13 +56,13 @@ Coloque aqui documentos que ajudem o agente a tomar decisões melhores.
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-No `cucumber.yml` o perfil `rag` está configurado para usar os Page Objects reais do projeto:
+No `cucumber.yml` o perfil `rag` está configurado para usar **ambos** os diretórios:
 
 ```yaml
-rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0 RAG_KNOWLEDGE_BASE_DIR=features/pages
+rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0 RAG_KNOWLEDGE_BASE_DIR=features/pages,features/support/self_healing/knowledge_base
 ```
 
-Use a pasta `knowledge_base/` para complementar com regras de negócio, fluxos e validações que não estão nos Page Objects.
+Dessa forma, o RAG recupera tanto os Page Objects reais quanto as regras de negócio, fluxos e validações mantidos em `knowledge_base/`.
 
 ## Organização sugerida
 
@@ -100,12 +100,25 @@ E execute com o perfil `rag`:
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 ```
 
-Opcionalmente, configure um modelo de embedding:
+Opcionalmente, configure um modelo de embedding. Exemplo com OpenAI:
 
 ```bash
 RAG_EMBEDDING_MODEL=text-embedding-3-small
 RAG_EMBEDDING_API_KEY=sua_chave
 RAG_EMBEDDING_BASE_URL=https://api.openai.com/v1
 ```
+
+Exemplo com **Jina AI `jina-embeddings-v3`**:
+
+```bash
+RAG_EMBEDDING_MODEL=jina-embeddings-v3
+RAG_EMBEDDING_API_KEY=sua_chave_jina
+RAG_EMBEDDING_BASE_URL=https://api.jina.ai/v1
+RAG_EMBEDDING_DIMENSIONS=1024
+RAG_EMBEDDING_TASK=retrieval.passage
+RAG_EMBEDDING_TASK_QUERY=retrieval.query
+```
+
+> **Atenção:** ao trocar de modelo ou dimensões, o `rag_store/` é reindexado automaticamente na próxima execução.
 
 Se não configurar um modelo de embedding, o sistema usa um embedder local baseado em palavras-chave (sem custo de API, mas menos preciso).

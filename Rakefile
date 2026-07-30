@@ -27,11 +27,13 @@ namespace :ai do
 
   desc 'Executar instrução em linguagem natural via SelfHealing Agent (sem step definitions do Cucumber)'
   task :run, [:instruction] do |_t, args|
+    raise "Self-Healing não está habilitado" if ENV['SELF_HEALING_ENABLED'] == 'false'
+    raise "Self-Healing não está habilitado" if ENV['RAG_ENABLED'] == 'false'
     ENV['SELF_HEALING_ENABLED'] = 'true'
     ENV['RAG_ENABLED'] = 'true'
     ENV['RAG_TOP_K'] ||= '3'
     ENV['RAG_MIN_SIMILARITY'] ||= '0.0'
-    ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages'
+    ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages,features/support/self_healing/knowledge_base'
     ENV['ENVIRONMENT_TYPE'] ||= 'local'
 
     require_relative 'features/support/env'
@@ -51,11 +53,13 @@ namespace :ai do
 
   desc 'Executar cenários de features .feature via SelfHealing Agent (sem step definitions do Cucumber)'
   task :run_features, [:tag, :features_dir] do |_t, args|
-    ENV['SELF_HEALING_ENABLED'] = 'true'
-    ENV['RAG_ENABLED'] = 'true'
+    raise "Self-Healing não está habilitado" if ENV['SELF_HEALING_ENABLED'] == 'false'
+    raise "Self-Healing não está habilitado" if ENV['RAG_ENABLED'] == 'false'
+    ENV['SELF_HEALING_ENABLED'] == 'true'
+    ENV['RAG_ENABLED'] == 'true'
     ENV['RAG_TOP_K'] ||= '3'
     ENV['RAG_MIN_SIMILARITY'] ||= '0.0'
-    ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages'
+    ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages,features/support/self_healing/knowledge_base'
     ENV['ENVIRONMENT_TYPE'] ||= 'local'
     ENV['CUCUMBER_RUN'] = 'false'
 
@@ -100,6 +104,9 @@ namespace :ai do
   task :apply_corrections do
     require_relative 'features/support/env'
     require_relative 'features/support/self_healing/locator_applier'
+
+    raise "Self-Healing não está habilitado" if ENV['SELF_HEALING_ENABLED'] == 'false'
+    raise "Self-Healing não está habilitado" if ENV['RAG_ENABLED'] == 'false'
 
     applier = SelfHealing::LocatorApplier.new
     results = applier.apply_all

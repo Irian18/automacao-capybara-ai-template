@@ -219,8 +219,9 @@ A camada `features/support/self_healing/` fornece:
    - [`SelfHealing::FeatureReader`](features/support/self_healing/feature_reader.rb) — lê arquivos `.feature` e extrai cenários, tags e steps. É usado internamente pelo runner de cenários para descobrir e executar testes de self healing de forma automatizada.
 
 4. **RAG Knowledge Base**
-   - Os Page Objects reais em [`features/pages/`](features/pages/) são usados como base de conhecimento para o RAG. Dessa forma, a IA mantém o mesmo padrão, nomenclatura e estilo do projeto ao gerar novos POs ou corrigir planos.
-   - Documentos extras podem ser mantidos em [`knowledge_base/`](features/support/self_healing/knowledge_base/) (`.md`, `.txt`, `.yml`, `.feature`) para regras de negócio, fluxos e validações. Veja [`knowledge_base/README.md`](features/support/self_healing/knowledge_base/README.md) para detalhes.
+   - O RAG indexa automaticamente os Page Objects reais em [`features/pages/`](features/pages/) **e** os documentos de [`knowledge_base/`](features/support/self_healing/knowledge_base/) (`.md`, `.txt`, `.yml`, `.feature`).
+   - Os Page Objects garantem que a IA siga o padrão, nomenclatura e estilo do projeto ao gerar novos POs ou corrigir planos.
+   - A `knowledge_base/` complementa com regras de negócio, fluxos e validações. Veja [`knowledge_base/README.md`](features/support/self_healing/knowledge_base/README.md) para detalhes.
 
 ### Processo de execução do Self Healing
 
@@ -400,6 +401,30 @@ agent.execute('Faça login com as credenciais válidas do sistema')
 ```
 
 Documentação completa da camada de Self Healing (modos de operação, configuração, RAG, retry adaptativo e execução automática de cenários) está em [`features/support/self_healing/README.md`](features/support/self_healing/README.md).
+
+---
+
+## 🔌 Provedores de Embedding suportados
+
+O RAG pode usar qualquer API compatível com o formato OpenAI `/v1/embeddings`. Exemplos configurados:
+
+| Provedor | Modelo | URL base | Observações |
+|----------|--------|----------|-------------|
+| OpenAI | `text-embedding-3-small` | `https://api.openai.com/v1` | Padrão do template. |
+| Jina AI | `jina-embeddings-v3` | `https://api.jina.ai/v1` | Multilíngue, 8192 tokens, 1024 dimensões padrão. |
+
+Para usar o **Jina AI `jina-embeddings-v3`**:
+
+```bash
+RAG_EMBEDDING_MODEL=jina-embeddings-v3
+RAG_EMBEDDING_API_KEY=sua_chave_jina
+RAG_EMBEDDING_BASE_URL=https://api.jina.ai/v1
+RAG_EMBEDDING_DIMENSIONS=1024
+RAG_EMBEDDING_TASK=retrieval.passage
+RAG_EMBEDDING_TASK_QUERY=retrieval.query
+```
+
+> Ao alterar modelo ou dimensões, o índice em `rag_store/` será reindexado automaticamente.
 
 ---
 

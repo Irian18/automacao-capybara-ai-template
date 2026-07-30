@@ -49,6 +49,33 @@ jobs:
           ENVIRONMENT_TYPE: ci
           BROWSER: cuprite
 
+      - name: Fetch previous Allure history
+        if: always()
+        run: |
+          git clone --branch gh-pages --single-branch \
+            https://x-access-token:${{ secrets.ALLURE_REPORTS_TOKEN }}@github.com/${{ vars.ALLURE_REPORTS_REPO || 'Irian18/capybara-ia-allure-report' }}.git \
+            report/allure_history_tmp || true
+          if [ -d report/allure_history_tmp/history ]; then
+            cp -r report/allure_history_tmp/history report/allure_results/history
+          fi
+          rm -rf report/allure_history_tmp
+
+      - name: Create Allure executor info
+        if: always()
+        run: |
+          mkdir -p report/allure_results
+          cat > report/allure_results/executor.json <<EOF
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "buildUrl": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "buildOrder": "${{ github.run_number }}",
+            "buildName": "Run #${{ github.run_number }}",
+            "reportUrl": "https://${{ github.repository_owner }}.github.io/capybara-ia-allure-report/"
+          }
+          EOF
+
       - name: Generate Allure Report
         if: always()
         run: |

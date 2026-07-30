@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../config'
 require_relative 'store'
 require_relative 'embedder'
@@ -24,12 +26,12 @@ module SelfHealing
         cache_key = cache_key_for(query, filters)
         return @query_cache[cache_key] if @query_cache.key?(cache_key)
 
-        query_embedding = @embedder.embed(query)
+        query_embedding = @embedder.embed(query, task: Config.rag_embedding_task_query)
         docs = @store.all
 
         scored = docs.map do |doc|
           score = cosine_similarity(query_embedding, doc.embedding)
-          Result.new(document: doc, score: score)
+          Result.new(document: doc, score:)
         end
 
         scored = scored.select { |r| r.score >= @min_similarity }
@@ -45,13 +47,13 @@ module SelfHealing
       end
 
       def search_text(query, filters: {})
-        search(query, filters: filters).map do |result|
+        search(query, filters:).map do |result|
           format_result(result)
         end.join("\n\n---\n\n")
       end
 
       def context_for(query, label: 'CONTEXTO RECUPERADO', filters: {})
-        text = search_text(query, filters: filters)
+        text = search_text(query, filters:)
         return '' if text.strip.empty?
 
         <<~CTX
@@ -66,12 +68,12 @@ module SelfHealing
         "#{query}:#{filters.to_json}"
       end
 
-      def cosine_similarity(a, b)
-        return 0.0 if a.nil? || b.nil? || a.empty? || b.empty?
+      def cosine_similarity(vec_a, vec_b)
+        return 0.0 if vec_a.nil? || vec_b.nil? || vec_a.empty? || vec_b.empty?
 
-        dot = a.zip(b).sum { |x, y| (x || 0.0) * (y || 0.0) }
-        mag_a = Math.sqrt(a.sum { |x| x * x })
-        mag_b = Math.sqrt(b.sum { |x| x * x })
+        dot = vec_a.zip(vec_b).sum { |x, y| (x || 0.0) * (y || 0.0) }
+        mag_a = Math.sqrt(vec_a.sum { |x| x * x })
+        mag_b = Math.sqrt(vec_b.sum { |x| x * x })
 
         return 0.0 if mag_a.zero? || mag_b.zero?
 
