@@ -162,16 +162,16 @@ O arquivo `agent.rb` é o orquestrador principal, carregado por `features/suppor
 
 ```bash
 # Executar uma instrução diretamente
-bundle exec rake ai:run["Preencha o formulário de login"]
+bundle exec rake "ai:run["Preencha o formulário de login"]"
 
 # Executar cenários de arquivos .feature
-bundle exec rake ai:run_features
+bundle exec rake "ai:run_features"
 
 # Executar cenários por tag
-bundle exec rake ai:run_features[@login_self_healing]
+bundle exec rake "ai:run_features[@login_self_healing]"
 
 # Forçar re-descoberta (ignora planos cacheados)
-AI_FORCE_RECORD=true bundle exec rake ai:run_features
+bundle exec rake "ai:run_features_record[@login_self_healing]"
 
 # Aplicar correções do histórico nos Page Objects
 bundle exec rake ai:apply_corrections
