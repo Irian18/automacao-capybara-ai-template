@@ -5,17 +5,17 @@ require 'cucumber/rake/task'
 namespace :cucumber do
   desc 'Executar todas as features no ambiente de CI'
   task :exec_ci do
-    sh 'rm -rf report/html_report && mkdir -p report/html_report && touch report/html_report/report.html && bundle exec cucumber ENVIRONMENT_TYPE=ci BROWSER=cuprite --retry 2 --format progress -t "not @wip"'
+    sh 'rm -rf report/html_report && mkdir -p report/html_report && touch report/html_report/report.html && bundle exec cucumber ENVIRONMENT_TYPE=ci --retry 2 --format progress -t "not @wip"'
   end
 
   desc 'Executar testes por tag'
   task :exec_tag, [:tag] do |_t, args|
-    sh "bundle exec cucumber BROWSER=cuprite ENVIRONMENT_TYPE=local --format pretty -t @#{args[:tag]}"
+    sh "bundle exec cucumber ENVIRONMENT_TYPE=local --format pretty -t @#{args[:tag]}"
   end
 
   desc 'Executar feature de exemplo'
   task :exec_example do
-    sh 'bundle exec cucumber ENVIRONMENT_TYPE=local BROWSER=cuprite --format pretty -t @exemplo'
+    sh 'bundle exec cucumber ENVIRONMENT_TYPE=local --format pretty -t @exemplo'
   end
 end
 
@@ -55,8 +55,8 @@ namespace :ai do
   task :run_features, [:tag, :features_dir] do |_t, args|
     raise "Self-Healing não está habilitado" if ENV['SELF_HEALING_ENABLED'] == 'false'
     raise "Self-Healing não está habilitado" if ENV['RAG_ENABLED'] == 'false'
-    ENV['SELF_HEALING_ENABLED'] == 'true'
-    ENV['RAG_ENABLED'] == 'true'
+    ENV['SELF_HEALING_ENABLED'] = 'true'
+    ENV['RAG_ENABLED'] = 'true'
     ENV['RAG_TOP_K'] ||= '3'
     ENV['RAG_MIN_SIMILARITY'] ||= '0.0'
     ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages,features/support/self_healing/knowledge_base'
@@ -98,6 +98,12 @@ namespace :ai do
 
     puts "\n#{scenarios.size - failures.size}/#{scenarios.size} cenários executados com sucesso."
     exit(1) unless failures.empty?
+  end
+
+  desc 'Executar cenários de features via SelfHealing Agent com AI_FORCE_RECORD=true'
+  task :run_features_record, [:tag, :features_dir] do |_t, args|
+    ENV['AI_FORCE_RECORD'] = 'true'
+    Rake::Task['ai:run_features'].invoke(args[:tag], args[:features_dir])
   end
 
   desc 'Aplicar correções de locators do Self Healing nos arquivos de page objects'

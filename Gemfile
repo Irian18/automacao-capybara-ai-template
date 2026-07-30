@@ -17,6 +17,7 @@ gem 'site_prism', '~> 5.0'
 gem 'byebug', '~> 11.1.3'
 gem 'pry', '~> 0.14'
 gem 'pry-byebug', '~> 3.10.1'
+gem 'ostruct'
 
 gem 'allure-cucumber', '~> 2.0'
 

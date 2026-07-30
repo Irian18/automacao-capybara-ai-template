@@ -1,5 +1,5 @@
 ---
-default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p cuprite -p norag -p no_self_healing
+default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p cuprite -p rag -p self_healing
 
 # Formatação
 pretty: --format pretty
@@ -19,11 +19,12 @@ prod_automacao_ci: ENVIRONMENT_TYPE=prod_automacao_ci
 
 # RAG
 rag: RAG_ENABLED=true RAG_TOP_K=3 RAG_MIN_SIMILARITY=0.0 RAG_KNOWLEDGE_BASE_DIR=features/pages,features/support/self_healing/knowledge_base
-norag: RAG_ENABLED=false
+no_rag: RAG_ENABLED=false
 
 # Self Healing
-self_healing: SELF_HEALING_ENABLED=true
+self_healing: SELF_HEALING_ENABLED=true --exclude "features/support/self_healing/spec"
 no_self_healing: SELF_HEALING_ENABLED=false --exclude "features/support/self_healing/spec"
+AI_FORCE_RECORD: true
 
 # Relatórios
 html: --format html --out=report/html_report/report.html

@@ -3,7 +3,7 @@
 url_home: https://www.saucedemo.com
 base_uri: https://api.sua-aplicacao.com.br
 
-headless_mode: true
+headless_mode: false
 
 # Credenciais de acesso ao front-end
 email: standard_user
