@@ -43,21 +43,14 @@ Before do |scenario|
   @scenario = scenario
   @scenario_name = scenario.name.to_s.gsub(/[^a-zA-Z0-9_-]/, '_')[0, 80]
   @video_frames  = []
+  capture_video_frame
   sleep 0.5
   generate_access_credentials_v1(email: CONFIG['email_api_v1'], password: CONFIG['password_api_v1']) if respond_to?(:login_service)
   sleep 0.5
 end
 
 AfterStep do |result, step|
-  begin
-    drv = Capybara.current_session.driver
-    if drv.respond_to?(:render_base64)
-      raw = drv.render_base64(:jpeg, quality: 60, full: false)
-      (@video_frames ||= []) << Base64.strict_decode64(raw) if raw
-    end
-  rescue StandardError
-    nil
-  end
+  capture_video_frame
 
   next unless result.failed?
 
@@ -97,7 +90,19 @@ After do |scenario|
   end
 end
 
+def capture_video_frame
+  drv = Capybara.current_session.driver
+  return unless drv.respond_to?(:render_base64)
+
+  raw = drv.render_base64(:jpeg, quality: 75, full: false)
+  (@video_frames ||= []) << Base64.strict_decode64(raw) if raw
+rescue StandardError
+  nil
+end
+
 def attach_scenario_video
+  capture_video_frame
+
   frames = Array(@video_frames).compact
   return if frames.empty?
 
@@ -107,13 +112,15 @@ def attach_scenario_video
   )
   FileUtils.mkdir_p(File.dirname(video_path))
 
+  framerate = frames.size > 10 ? 5 : 2
+
   Dir.mktmpdir do |tmp|
     frames.each_with_index do |frame, idx|
       File.binwrite(File.join(tmp, format('frame_%06d.jpg', idx)), frame)
     end
     system(
       'ffmpeg', '-y', '-loglevel', 'quiet',
-      '-framerate', '2',
+      '-framerate', framerate.to_s,
       '-i', File.join(tmp, 'frame_%06d.jpg'),
       '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
       '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
