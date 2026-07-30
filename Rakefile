@@ -40,7 +40,7 @@ namespace :ai do
 
     instruction = args[:instruction]
     if instruction.nil? || instruction.empty?
-      raise 'Informe a instrução: rake ai:run["fazer login com standard_user"]'
+      raise 'Informe a instrução: rake ai:run["{instruction}"]'
     end
 
     Capybara.current_session.visit(CONFIG['url_home'])

@@ -61,6 +61,25 @@ features/support/self_healing/
 - **Dados gerados**: `locator_history.json`.
 - **Testes**: `spec/`.
 
+## Padrões de projeto aplicados
+
+O framework foi construído com padrões que favorecem clareza, testabilidade e evolução:
+
+| Padrão | Onde está | Benefício |
+|--------|-----------|-----------|
+| **Page Object Model (POM)** | `features/pages/` | Separa a representação da UI da lógica dos testes. |
+| **Strategy** | `tools/*.rb` + `Tools::Base` | Cada ação da IA é uma estratégia intercambiável. |
+| **Registry** | `Tools::Registry` | Carrega e expõe as ferramentas dinamicamente. |
+| **Command** | Chamadas de `Tools.dispatch` | Cada tool encapsula uma ação sobre a página. |
+| **Template Method** | `Tools::Base` | Esqueleto comum (`with_retry`) para todas as ferramentas. |
+| **Adapter** | `ApiClient` | Isola a API da LLM (formato OpenAI) do restante do sistema. |
+| **Repository** | `Rag::Store` | Abstrai a persistência do índice vetorial. |
+| **Factory** | `Rag::Embedder.default` | Cria o embedder correto de acordo com a configuração. |
+| **Cache** | `PlanCache` / `Retriever#query_cache` | Evita chamadas repetidas e reduz custo de API. |
+| **History/Auditoria** | `LocatorHistory` | Mantém log versionado de alterações de locators. |
+| **Dependency Injection** | `Agent.new(session:, page_object:, ...)` | Facilita testes e substituição de dependências. |
+| **Facade** | `Agent#execute` | Interface simples para um fluxo complexo (RECORD/REPLAY/HEAL). |
+
 ## Ponto de entrada
 
 O arquivo `agent.rb` é o orquestrador principal, carregado por `features/support/env.rb` quando `SELF_HEALING_ENABLED=true` e pelas rake tasks.
@@ -139,7 +158,7 @@ O arquivo `agent.rb` é o orquestrador principal, carregado por `features/suppor
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Execução via rake tasks
+## Execução via rake tasks
 
 ```bash
 # Executar uma instrução diretamente
@@ -148,6 +167,35 @@ bundle exec rake ai:run["Preencha o formulário de login"]
 # Executar cenários de arquivos .feature
 bundle exec rake ai:run_features
 
+# Executar cenários por tag
+bundle exec rake ai:run_features[@login_self_healing]
+
 # Forçar re-descoberta (ignora planos cacheados)
 AI_FORCE_RECORD=true bundle exec rake ai:run_features
+
+# Aplicar correções do histórico nos Page Objects
+bundle exec rake ai:apply_corrections
 ```
+
+## Comportamento por combinação de perfis
+
+| Combinação | O que acontece |
+|------------|----------------|
+| Nenhum | Testes E2E tradicionais, sem IA. |
+| `-p self_healing` | IA descobre/corrige ações, mas usa apenas snapshot e PO atual. |
+| `-p self_healing -p rag` | IA usa Page Objects reais e knowledge base como contexto extra. |
+| Apenas `-p rag` | Sem efeito prático, pois o agente não é carregado. |
+
+## Troubleshooting
+
+| Sintoma | Causa provável | Solução |
+|---------|----------------|---------|
+| `AI_API_KEY não definida` | `.env` não configurado | Copie `.env.example` para `.env` e defina `AI_API_KEY`. |
+| Plano não é regravado | Cache ainda válido | Use `AI_FORCE_RECORD=true` ou apague `features/support/self_healing/plans/`. |
+| REPLAY falha sempre | UI mudou muito | Use `AI_FORCE_RECORD=true` para forçar um novo RECORD. |
+| RAG não traz contexto | `RAG_MIN_SIMILARITY` alto ou embedder local impreciso | Diminua `RAG_MIN_SIMILARITY` ou configure um embedder de API. |
+
+## Links
+
+- Documentação da base de conhecimento: [`knowledge_base/README.md`](knowledge_base/README.md)
+- README geral do projeto: [`README.md`](../../../README.md)

@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Template de automação de testes E2E com Ruby, Capybara, Cucumber e Self Healing Locators com IA.">
+  <meta name="author" content="Irian Rockenbach">
+  <meta name="keywords" content="Ruby, Capybara, Cucumber, SitePrism, Self Healing, RAG, Automação de Testes, E2E, IA">
+  <meta name="theme-color" content="#0f172a">
   <title>Capybara Self-Healing Locators | Automação E2E com IA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -334,6 +337,7 @@
         <li><a href="#funcionalidades">Funcionalidades</a></li>
         <li><a href="#historico">Histórico</a></li>
         <li><a href="#arquitetura">Arquitetura</a></li>
+        <li><a href="#padroes">Padrões</a></li>
         <li><a href="#processo">Processo</a></li>
         <li><a href="#como-usar">Como Usar</a></li>
         <li><a href="#tecnologias">Tecnologias</a></li>
@@ -350,7 +354,7 @@
         de alterações para análise.
       </p>
       <div class="btn-group">
-        <a href="https://github.com/Irian18/automacao-capybara-ai-template" class="btn btn-primary">Ver no GitHub</a>
+        <a href="https://github.com/Irian18/capybara-self-healing-locators" class="btn btn-primary">Ver no GitHub</a>
         <a href="README.md" class="btn btn-outline">Ler README</a>
       </div>
     </section>
@@ -658,6 +662,63 @@
       </div>
     </section>
 
+    <section id="padroes" class="about">
+      <h2>🧩 Padrões de projeto aplicados</h2>
+      <p>
+        O template foi construído com padrões de projeto que facilitam manutenção,
+        testes e evolução da suíte:
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>📄 Page Object Model</h3>
+          <p>
+            Page Objects com SitePrism em <code>features/pages/</code> isolam a UI
+            dos cenários de teste, reduzindo duplicação e facilitando refatorações.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>🧩 Strategy + Registry</h3>
+          <p>
+            Cada ação da IA (click, fill_in, assert etc.) é uma estratégia registrada
+            dinamicamente em <code>features/support/self_healing/tools/</code>.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>🔌 Adapter</h3>
+          <p>
+            <code>ApiClient</code> isola a comunicação com a LLM (formato OpenAI),
+            permitindo trocar de provedor sem espalhar mudanças pelo código.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>🏛️ Repository + Factory</h3>
+          <p>
+            <code>Rag::Store</code> abstrai a persistência do índice vetorial e
+            <code>Embedder.default</code> escolhe a estratégia de embedding via configuração.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>📦 Facade</h3>
+          <p>
+            <code>Agent#execute</code> oferece uma interface simples para o fluxo
+            complexo de RECORD → REPLAY → HEAL.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>📝 Auditoria</h3>
+          <p>
+            <code>LocatorHistory</code> mantém um log versionado de todas as alterações
+            de locators propostas pela IA.
+          </p>
+        </article>
+      </div>
+    </section>
+
     <section id="como-usar">
       <h2>🚀 Pré-requisitos, Instalação e Configuração</h2>
       <p style="color: var(--text-muted); margin-bottom: 1rem;">
@@ -958,8 +1019,10 @@ bundle exec cucumber -p local</code>
         Explore o repositório, a documentação completa ou entre em contato.
       </p>
       <div class="links">
-        <a href="https://github.com/Irian18/automacao-capybara-ai-template" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
+        <a href="https://github.com/Irian18/capybara-self-healing-locators" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub</a>
         <a href="README.md" class="btn btn-outline">README.md</a>
+        <a href="features/support/self_healing/README.md" class="btn btn-outline">Self Healing</a>
+        <a href="features/support/self_healing/knowledge_base/README.md" class="btn btn-outline">RAG</a>
         <a href="cucumber.yml" class="btn btn-outline">cucumber.yml</a>
         <a href="https://linkedin.com/in/irian8" target="_blank" rel="noopener noreferrer" class="btn btn-outline">LinkedIn</a>
       </div>
