@@ -5,7 +5,7 @@ class LoginPage < SitePrism::Page
   set_url '/'
 
   element :in_user_id, '#user-name'
-  element :in_user_data_test, 'input[data-test="username"]'
+  element :in_user_data_test, 'input[data-test="usernameee"]'
   element :in_password_id, '#password'
   element :in_password_data_test, 'input[data-test="password"]'
   element :bt_submit_id, '#login-button'

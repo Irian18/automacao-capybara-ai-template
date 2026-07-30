@@ -400,7 +400,8 @@
       <h2>▶️ Execuções</h2>
       <p>
         O Self Healing pode ser executado de diferentes formas: passando uma instrução diretamente,
-        apontando para um arquivo <code>.feature</code> ou filtrando por tag. Veja os exemplos abaixo.
+        apontando para um arquivo <code>.feature</code>, filtrando por tag ou aplicando as correções
+        sugeridas nos Page Objects. Veja os exemplos abaixo.
       </p>
       <div class="cards">
         <article class="card">
@@ -409,7 +410,7 @@
             Execute uma instrução em linguagem natural diretamente pela rake task.
           </p>
           <div class="code-block">
-            <code>bundle exec rake ai:run["Preencha o formulário de login"]</code>
+            <code>bundle exec rake "ai:run["Preencha o formulário de login"]"</code>
           </div>
         </article>
 
@@ -419,7 +420,7 @@
             Execute cenários contidos em um arquivo específico de self healing.
           </p>
           <div class="code-block">
-            <code>bundle exec rake ai:run_features[features/specs/self_healing/login_self_healing.feature]</code>
+            <code>bundle exec rake "ai:run_features[features/specs/self_healing/login_self_healing.feature]"</code>
           </div>
         </article>
 
@@ -429,7 +430,18 @@
             Filtre cenários de self healing por tag, como <code>@login_self_healing</code>.
           </p>
           <div class="code-block">
-            <code>bundle exec rake ai:run_features[@login_self_healing]</code>
+            <code>bundle exec rake "ai:run_features[@login_self_healing]"</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>🔧 Aplicar correções</h3>
+          <p>
+            Aplique as correções de locators sugeridas pelo Self Healing diretamente nos arquivos
+            dos Page Objects, com base no histórico registrado.
+          </p>
+          <div class="code-block">
+            <code>bundle exec rake "ai:apply_corrections"</code>
           </div>
         </article>
       </div>
@@ -965,6 +977,15 @@ bundle exec cucumber -p local</code>
           <p>
             Não. O Self Healing salva as alterações propostas no histórico em JSON, mas não
             sobrescreve os arquivos <code>.rb</code> dos Page Objects. Você revisa e aplica manualmente.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Quando o elemento é substituído?</h3>
+          <p>
+            O Self Healing só entra em ação quando o Capybara não consegue encontrar o elemento
+            com o locator original. Nesse momento, a IA analisa a DOM atual, busca o melhor
+            candidato equivalente e registra a mudança no histórico para revisão.
           </p>
         </article>
 

@@ -4,23 +4,10 @@ require 'capybara/dsl'
 require 'selenium-webdriver'
 require 'site_prism'
 require 'faker'
-# require 'date'          # não utilizado no projeto
-# require 'cpf_faker'     # não utilizado no projeto
-# require 'debug'         # não utilizado no projeto
-# require 'pry-byebug'    # não utilizado no projeto (ferramenta de debug manual)
 require 'httparty'
 require 'allure-cucumber'
 require 'allure-ruby-commons'
-if ENV['CUCUMBER_RUN'] == 'false'
-  require 'capybara/dsl'
-  require 'capybara/rspec/matchers'
-else
-  require 'capybara/cucumber'
-end
-# require 'cucumber/core'         # não utilizado no projeto
-# require 'cucumber/core/filter'  # não utilizado no projeto
 require 'json'
-# require 'open3'         # não utilizado no projeto
 require 'dry-struct'
 require 'time'
 require 'google/apis/sheets_v4'
@@ -31,7 +18,14 @@ require 'socket'
 require 'capybara/cuprite'
 require 'ferrum'
 require 'dotenv/load'
-# require 'matrix'        # não utilizado no projeto
+
+if ENV['CUCUMBER_RUN'] == 'false'
+  require 'capybara/dsl'
+  require 'capybara/rspec/matchers'
+else
+  require 'capybara/cucumber'
+end
+
 require_relative 'page_helper'
 require_relative 'self_healing/agent' if ENV['SELF_HEALING_ENABLED'] == 'true'
 

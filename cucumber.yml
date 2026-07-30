@@ -5,7 +5,7 @@ default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p
 pretty: --format pretty
 for_ci: --format progress
 
-# Browsers
+# Drivers
 cuprite: BROWSER=cuprite
 
 # Ambientes de teste

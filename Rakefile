@@ -1,6 +1,31 @@
 require 'rake'
 require 'cucumber'
 require 'cucumber/rake/task'
+require 'yaml'
+
+def environment_type_from_cucumber_default
+  cucumber_yml = File.expand_path('cucumber.yml', __dir__)
+  return 'example' unless File.exist?(cucumber_yml)
+
+  config = YAML.load_file(cucumber_yml)
+  default_profile = config['default'].to_s
+  return 'example' if default_profile.empty?
+
+  direct_env = default_profile[/ENVIRONMENT_TYPE=(\w+)/, 1]
+  return direct_env if direct_env
+
+  referenced_profiles = default_profile.scan(/(?:^|\s)-p\s+(\w+)|--profile\s+(\w+)/).flatten.compact
+  referenced_profiles.each do |profile|
+    profile_value = config[profile].to_s
+    env_match = profile_value[/ENVIRONMENT_TYPE=(\w+)/, 1]
+    return env_match if env_match
+  end
+
+  'example'
+rescue StandardError => e
+  warn "[Rake] Não foi possível ler ENVIRONMENT_TYPE do cucumber.yml: #{e.message}"
+  'example'
+end
 
 namespace :cucumber do
   desc 'Executar todas as features no ambiente de CI'
@@ -10,12 +35,7 @@ namespace :cucumber do
 
   desc 'Executar testes por tag'
   task :exec_tag, [:tag] do |_t, args|
-    sh "bundle exec cucumber ENVIRONMENT_TYPE=local --format pretty -t @#{args[:tag]}"
-  end
-
-  desc 'Executar feature de exemplo'
-  task :exec_example do
-    sh 'bundle exec cucumber ENVIRONMENT_TYPE=local --format pretty -t @exemplo'
+    sh "bundle exec cucumber --format pretty -t @#{args[:tag]}"
   end
 end
 
@@ -34,7 +54,7 @@ namespace :ai do
     ENV['RAG_TOP_K'] ||= '3'
     ENV['RAG_MIN_SIMILARITY'] ||= '0.0'
     ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages,features/support/self_healing/knowledge_base'
-    ENV['ENVIRONMENT_TYPE'] ||= 'local'
+    ENV['ENVIRONMENT_TYPE'] ||= environment_type_from_cucumber_default
 
     require_relative 'features/support/env'
 
@@ -60,7 +80,7 @@ namespace :ai do
     ENV['RAG_TOP_K'] ||= '3'
     ENV['RAG_MIN_SIMILARITY'] ||= '0.0'
     ENV['RAG_KNOWLEDGE_BASE_DIR'] ||= 'features/pages,features/support/self_healing/knowledge_base'
-    ENV['ENVIRONMENT_TYPE'] ||= 'local'
+    ENV['ENVIRONMENT_TYPE'] ||= environment_type_from_cucumber_default
     ENV['CUCUMBER_RUN'] = 'false'
 
     require_relative 'features/support/env'
@@ -108,6 +128,10 @@ namespace :ai do
 
   desc 'Aplicar correções de locators do Self Healing nos arquivos de page objects'
   task :apply_corrections do
+    ENV['SELF_HEALING_ENABLED'] = 'true'
+    ENV['RAG_ENABLED'] = 'true'
+    ENV['ENVIRONMENT_TYPE'] ||= environment_type_from_cucumber_default
+    ENV['CUCUMBER_RUN'] = 'false'
     require_relative 'features/support/env'
     require_relative 'features/support/self_healing/locator_applier'
 
