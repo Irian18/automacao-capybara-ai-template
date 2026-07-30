@@ -11,6 +11,6 @@ Então('devo ver uma mensagem de erro {string} indicando que o usuário está bl
 end
 
 Então('devo ser redirecionado para a página inicial com url {string} com nome {string}') do |url, nome|
-  expect(page).to have_current_path("/#{url}")
+  expect(page).to have_current_path("/#{url}") 
   expect(products.secondary_header.span_title).to have_text(nome)
 end
