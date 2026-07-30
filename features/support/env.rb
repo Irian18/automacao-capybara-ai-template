@@ -37,7 +37,7 @@ require_relative 'self_healing/agent' if ENV['SELF_HEALING_ENABLED'] == 'true'
 
 Dir[File.join(File.dirname(__FILE__), 'helpers', '*.rb')].sort.each { |file| require_relative file }
 
-if defined?(World)
+if ENV['CUCUMBER_RUN'] != 'false' && respond_to?(:World)
   World(HTTParty)
   World(Capybara::DSL)
   World(Capybara::RSpecMatchers)

@@ -1,5 +1,5 @@
 ---
-default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p cuprite -p rag -p self_healing
+default: --publish-quiet --color -t "not @wip" -p pretty -p example -p allure -p routes_name -p cuprite -p norag -p no_self_healing
 
 # Formatação
 pretty: --format pretty

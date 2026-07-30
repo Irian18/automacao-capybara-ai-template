@@ -2,7 +2,7 @@ class LoginPage < SitePrism::Page
   include Capybara::DSL
   include Capybara::RSpecMatchers
 
-  set_url ''
+  set_url '/'
 
   element :in_user_id, '#user-name'
   element :in_user_data_test, 'input[data-test="username"]'
