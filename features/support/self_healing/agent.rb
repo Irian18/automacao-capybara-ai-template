@@ -12,7 +12,6 @@ require_relative 'locator_history'
 
 module SelfHealing
   class Agent
-    return if ENV['SELF_HEALING_ENABLED'] == 'false'
     MAX_ITERATIONS = 15
 
     attr_reader :mode # :replay, :record, :heal
