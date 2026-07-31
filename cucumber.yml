@@ -26,6 +26,10 @@ self_healing: SELF_HEALING_ENABLED=true --exclude "features/support/self_healing
 no_self_healing: SELF_HEALING_ENABLED=false --exclude "features/support/self_healing/spec"
 AI_FORCE_RECORD: true
 
+# Auto Correction
+auto_correction: AUTO_CORRECTION_ENABLED=true SELF_HEALING_ENABLED=true RAG_ENABLED=true --exclude "features/support/self_healing/spec"
+no_auto_correction: AUTO_CORRECTION_ENABLED=false
+
 # Relatórios
 html: --format html --out=report/html_report/report.html
 allure: --format AllureCucumber::CucumberFormatter --out report/allure_results

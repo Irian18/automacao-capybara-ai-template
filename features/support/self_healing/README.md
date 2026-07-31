@@ -43,6 +43,8 @@ features/support/self_healing/
 │   ├── feature_reader.rb
 │   ├── locator_applier.rb
 │   ├── locator_history.rb
+│   ├── locator_healer.rb
+│   ├── capybara_guard.rb
 │   ├── page_object_generator.rb
 │   ├── plan_cache.rb
 │   ├── plan_executor.rb
@@ -83,6 +85,41 @@ O framework foi construído com padrões que favorecem clareza, testabilidade e 
 ## Ponto de entrada
 
 O arquivo `agent.rb` é o orquestrador principal, carregado por `features/support/env.rb` quando `SELF_HEALING_ENABLED=true` e pelas rake tasks.
+
+## Auto Correction de Locators
+
+Além do ciclo RECORD/REPLAY/HEAL do agente, o projeto conta com uma camada de **auto-correção automática** que intercepta erros do Capybara durante a execução dos steps.
+
+Quando ativada, toda chamada a `Capybara::Session#find` que falhar com `ElementNotFound` é interceptada por `capybara_guard.rb`. Esse guarda:
+
+1. Tira um snapshot da página atual.
+2. Envia o snapshot para a LLM pedindo um novo selector equivalente.
+3. Valida o novo selector na página.
+4. Registra a mudança no `locator_history.json`.
+5. Aplica a correção diretamente no arquivo `.rb` do Page Object.
+6. Retenta o `find` com o novo selector para que o teste continue.
+
+A ativação é feita pelo perfil `auto_correction` no `cucumber.yml`:
+
+```yaml
+auto_correction: AUTO_CORRECTION_ENABLED=true SELF_HEALING_ENABLED=true RAG_ENABLED=true --exclude "features/support/self_healing/spec"
+```
+
+Use assim:
+
+```bash
+bundle exec cucumber -p auto_correction features/specs/login.feature
+```
+
+> **Atenção:** a correção é aplicada **diretamente no arquivo** do Page Object. Sempre revise as mudanças no Git antes de commitar.
+
+### Quando usar Auto Correction
+
+| Situação | Recomendação |
+|---|---|
+| Refatoração de frontend com muitos locators quebrados | `-p auto_correction` corrige os arquivos automaticamente enquanto você executa os testes. |
+| Suíte estável, poucas mudanças | Use `-p self_healing` ou `-p self_healing -p rag` apenas para registrar no histórico sem alterar arquivos. |
+| CI / regressão sem intervenção humana | Não use `-p auto_correction`; prefira `-p no_self_healing` para evitar custos e alterações automáticas. |
 
 ## Processo de execução
 
@@ -184,6 +221,8 @@ bundle exec rake ai:apply_corrections
 | Nenhum | Testes E2E tradicionais, sem IA. |
 | `-p self_healing` | IA descobre/corrige ações, mas usa apenas snapshot e PO atual. |
 | `-p self_healing -p rag` | IA usa Page Objects reais e knowledge base como contexto extra. |
+| `-p auto_correction` | Intercepta `ElementNotFound` em tempo real e corrige os arquivos `.rb` dos Page Objects automaticamente. |
+| `-p no_auto_correction` | Desativa a auto-correção automática. |
 | Apenas `-p rag` | Sem efeito prático, pois o agente não é carregado. |
 
 ## Troubleshooting

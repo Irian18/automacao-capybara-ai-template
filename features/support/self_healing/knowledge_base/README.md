@@ -139,6 +139,12 @@ Execute com o perfil `rag`:
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 ```
 
+Ou use o perfil `auto_correction`, que também ativa o RAG e corrige os Page Objects automaticamente quando um `ElementNotFound` é detectado durante a execução dos steps:
+
+```bash
+bundle exec cucumber -p auto_correction features/specs/login.feature
+```
+
 ## Configuração de embedding
 
 Opcionalmente, configure um modelo de embedding. Exemplo com OpenAI:

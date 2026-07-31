@@ -397,6 +397,12 @@
         evitando falsos negativos e mantendo a confiabilidade da suíte.
       </p>
       <p>
+        Há também o modo <strong>Auto Correction</strong>: quando ativado pelo perfil
+        <code>cucumber -p auto_correction</code>, erros de <code>ElementNotFound</code> são interceptados
+        durante a execução dos steps. A IA descobre um novo selector, valida na página e aplica a correção
+        diretamente no arquivo <code>.rb</code> do Page Object — ideal para refatorações de frontend.
+      </p>
+      <p>
         Por padrão, ambos os recursos estão <strong>desabilitados</strong> — basta usar os perfis
         <code>cucumber -p self_healing</code> e/ou <code>cucumber -p rag</code> quando quiser ativá-los.
       </p>
@@ -487,6 +493,20 @@
             <span class="tag success">Padrão</span>
           </div>
         </article>
+
+        <article class="card">
+          <h3>🤖 Auto Correction de Locators</h3>
+          <p>
+            Intercepta <code>ElementNotFound</code> durante a execução dos steps e corrige os locators
+            diretamente nos arquivos dos Page Objects, usando IA e snapshot da página.
+          </p>
+          <div class="tags">
+            <span class="tag">IA</span>
+            <span class="tag">Autocorreção</span>
+            <span class="tag">Page Objects</span>
+            <span class="tag warning">Opcional</span>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -536,6 +556,17 @@
           </p>
           <div class="code-block">
             <code>bundle exec rake "ai:apply_corrections"</code>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>🤖 Auto Correction em runtime</h3>
+          <p>
+            Execute os testes com o perfil <code>auto_correction</code> para interceptar erros
+            <code>ElementNotFound</code> e corrigir os Page Objects automaticamente durante a execução.
+          </p>
+          <div class="code-block">
+            <code>bundle exec cucumber -p auto_correction features/specs/login.feature</code>
           </div>
         </article>
       </div>
@@ -811,6 +842,10 @@ bundle exec cucumber -p local</code>
           <p>Habilita a busca de contexto nos Page Objects para enriquecer o prompt da IA.</p>
         </article>
         <article class="card">
+          <h3>auto_correction</h3>
+          <p>Intercepta <code>ElementNotFound</code> durante os steps e corrige os arquivos <code>.rb</code> dos Page Objects automaticamente.</p>
+        </article>
+        <article class="card">
           <h3>local / staging / sandbox</h3>
           <p>Definem qual arquivo de ambiente em <code>features/support/environments/</code> será carregado.</p>
         </article>
@@ -829,6 +864,7 @@ bundle exec cucumber -p local</code>
 | default         | Allure, Cuprite, ambiente example, sem IA    | Execução diária e CI padrão            |
 | self_healing    | SELF_HEALING_ENABLED=true + LocatorHistory   | UI instável ou em refactoring          |
 | rag             | RAG_ENABLED=true + índice de features/pages  | Quer contexto dos Page Objects na IA   |
+| auto_correction | AUTO_CORRECTION_ENABLED=true + CapybaraGuard | Quer correção automática de POs em runtime |
 | local/staging   | Carrega environment correspondente           | Testar contra ambiente específico      |
 | cuprite         | Driver headless Chrome via CDP               | Execução local rápida                  |
 | allure          | Gera resultados para o Allure Report         | Sempre que precisar de evidências      |</code>
@@ -981,13 +1017,15 @@ bundle exec cucumber -p local</code>
         <article class="card">
           <h3>A IA altera meus Page Objects automaticamente?</h3>
           <p>
-            Não. O Self Healing salva as alterações propostas no histórico em JSON, mas não
+            Por padrão, não. O Self Healing salva as alterações propostas no histórico em JSON, mas não
             sobrescreve os arquivos <code>.rb</code> dos Page Objects. Você revisa e aplica manualmente.
           </p>
           <p>
-            <strong>Observação:</strong> quando você executa <code>bundle exec rake "ai:apply_corrections"</code>,
-            o projeto aplica as correções do histórico diretamente nos Page Objects. Mesmo assim,
-            é recomendado revisar as mudanças no Git antes de commitar.
+            <strong>Exceção:</strong> quando você executa com o perfil <code>auto_correction</code>,
+            as correções são aplicadas diretamente nos arquivos dos Page Objects durante a execução.
+            Também é possível aplicar as correções do histórico com
+            <code>bundle exec rake "ai:apply_corrections"</code>. Em ambos os casos, revise as mudanças
+            no Git antes de commitar.
           </p>
         </article>
 

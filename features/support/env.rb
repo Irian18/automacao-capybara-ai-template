@@ -28,6 +28,7 @@ end
 
 require_relative 'page_helper'
 require_relative 'self_healing/agent' if ENV['SELF_HEALING_ENABLED'] == 'true'
+require_relative 'self_healing/capybara_guard' if ENV['AUTO_CORRECTION_ENABLED'] == 'true'
 
 Dir[File.join(File.dirname(__FILE__), 'helpers', '*.rb')].sort.each { |file| require_relative file }
 

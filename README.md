@@ -103,6 +103,9 @@ bundle exec cucumber -p self_healing features/specs/self_healing/login_self_heal
 # Com Self Healing + RAG habilitados
 bundle exec cucumber -p self_healing -p rag features/specs/self_healing/login_self_healing.feature
 
+# Com Auto Correction habilitado (corrige Page Objects automaticamente em runtime)
+bundle exec cucumber -p auto_correction features/specs/login.feature
+
 # Executar instrução em linguagem natural via rake task
 bundle exec rake ai:run["Preencha o formulário de login"]
 
@@ -129,6 +132,7 @@ O arquivo [`cucumber.yml`](cucumber.yml) centraliza os **perfis** do Cucumber, c
 | `routes_name` | Carrega `ROUTES_NAME=features/config/routes_by_name.yml`. |
 | `rag` / `no_rag` | Ativa ou desativa o RAG. O profile `rag` usa `features/pages` e `features\support\self_healing\knowledge_base` como base de conhecimento. |
 | `self_healing` / `no_self_healing` | Ativa ou desativa o carregamento da camada Self Healing, podendo usar arquivos .feature em `features\specs\self_healing` |
+| `auto_correction` / `no_auto_correction` | Ativa a interceptação automática de `ElementNotFound` e a correção direta nos arquivos `.rb` dos Page Objects. |
 
 ### ENVIRONMENT_TYPE
 
@@ -222,6 +226,11 @@ A camada `features/support/self_healing/` fornece:
    - O RAG indexa automaticamente os Page Objects reais em [`features/pages/`](features/pages/) **e** os documentos de [`knowledge_base/`](features/support/self_healing/knowledge_base/) (`.md`, `.txt`, `.yml`, `.feature`).
    - Os Page Objects garantem que a IA siga o padrão, nomenclatura e estilo do projeto ao gerar novos POs ou corrigir planos.
    - A `knowledge_base/` complementa com regras de negócio, fluxos e validações. Veja [`knowledge_base/README.md`](features/support/self_healing/knowledge_base/README.md) para detalhes.
+
+5. **Auto Correction de Locators**
+   - A camada `capybara_guard.rb` intercepta `Capybara::ElementNotFound` durante a execução dos steps.
+   - Quando ativada pelo perfil `auto_correction`, a IA descobre um novo selector, valida na página, registra no histórico e aplica a correção diretamente no arquivo `.rb` do Page Object.
+   - Útil em refatorações de frontend onde muitos locators quebram ao mesmo tempo.
 
 ### Processo de execução do Self Healing
 
