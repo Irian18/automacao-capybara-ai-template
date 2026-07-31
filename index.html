@@ -382,6 +382,12 @@
         Ele também não substitui os step definitions.
       </p>
       <p>
+        Para integrações com APIs externas, o projeto inclui o <strong>HTTParty</strong>.
+        Ele serve para realizar requisições HTTP de forma simples durante os testes,
+        seja para preparar massa de dados, consultar serviços auxiliares ou validar respostas
+        sem precisar sair do ecossistema Ruby.
+      </p>
+      <p>
         O objetivo é reduzir a manutenção da suíte de testes, evitando falhas por mudanças de ID, classe ou estrutura
         do DOM, e ao mesmo tempo manter a confiabilidade dos testes com histórico de alterações.
       </p>
@@ -470,14 +476,14 @@
         </article>
 
         <article class="card">
-          <h3>🌐 Drivers flexíveis</h3>
+          <h3>🌐 Cliente HTTP com HTTParty</h3>
           <p>
-            Suporte a Cuprite (Chrome headless via CDP) e Selenium WebDriver,
-            configuráveis por perfis no <code>cucumber.yml</code>.
+            Facilita a integração com APIs externas e serviços auxiliares durante os testes,
+            permitindo preparar dados, consultar endpoints ou validar respostas sem sair do Ruby.
           </p>
           <div class="tags">
-            <span class="tag">Cuprite</span>
-            <span class="tag">Selenium</span>
+            <span class="tag">API</span>
+            <span class="tag">HTTP</span>
             <span class="tag success">Padrão</span>
           </div>
         </article>
